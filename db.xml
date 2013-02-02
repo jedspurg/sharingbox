@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<schema version="0.3"> 
+	<table name="SharingboxPosts">
+ 		<field name="pID" type="I">
+			<key />
+			<autoincrement/>
+		</field>
+		<field name="uID" type="I">
+			<default value="0"/>
+		</field>
+		<field name="postType" type="I">
+			<default value="1"/>
+		</field>		
+		<field name="post" type="X2">
+		</field>
+		<field name="entryDate" type="T">
+			<deftimestamp/>
+		</field>
+	</table>
+  <table name="SharingboxComments">
+ 		<field name="commentID" type="I">
+			<key />
+			<autoincrement/>
+		</field>
+		<field name="pID" type="I" size="10">
+		</field>
+		<field name="uID" type="I">
+			<default value="0"/>
+		</field>		
+		<field name="commentText" type="X2">
+		</field>
+		<field name="entryDate" type="T">
+			<deftimestamp/>
+		</field>
+	</table>
+</schema>
