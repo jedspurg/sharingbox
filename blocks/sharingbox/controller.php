@@ -33,25 +33,27 @@ class SharingboxBlockController extends BlockController {
 	}	
 	
 	function view() { 
+	
 	}
 
 	function on_page_view() {
 		$html = Loader::helper('html');
-		$b = Block::getByName('cws_share');
+		$b = Block::getByName('sharingbox');
 		$this->addFooterItem('
 		<script type="text/javascript">
-		var CWS_TOOLS_DIR = "'.Loader::helper('concrete/urls')->getBlockTypeToolsURL($b).'cws_share/";
-		var CWS_COMMENT_HELPER = "'.Loader::helper('concrete/urls')->getToolsURL('add_comment', 'c5_wall_share').'";
-		var CWS_UPDATE_COMMENT = "'.Loader::helper('concrete/urls')->getToolsURL('update_comment', 'c5_wall_share').'";
-		var CWS_POST_UPDATE = "'.Loader::helper('concrete/urls')->getToolsURL('update_post', 'c5_wall_share').'";
-		var CWS_POST_DELETE = "'.Loader::helper('concrete/urls')->getToolsURL('delete_post', 'c5_wall_share').'";
-		var CWS_COMMENT_DELETE = "'.Loader::helper('concrete/urls')->getToolsURL('delete_comment', 'c5_wall_share').'";
+		var CWS_TOOLS_DIR = "'.Loader::helper('concrete/urls')->getBlockTypeToolsURL($b).'sharingbox/";
+		var CWS_COMMENT_HELPER = "'.Loader::helper('concrete/urls')->getToolsURL('add_comment', 'sharingbox').'";
+		var CWS_UPDATE_COMMENT = "'.Loader::helper('concrete/urls')->getToolsURL('update_comment', 'sharingbox').'";
+		var CWS_POST_UPDATE = "'.Loader::helper('concrete/urls')->getToolsURL('update_post', 'sharingbox').'";
+		var CWS_POST_DELETE = "'.Loader::helper('concrete/urls')->getToolsURL('delete_post', 'sharingbox').'";
+		var CWS_COMMENT_DELETE = "'.Loader::helper('concrete/urls')->getToolsURL('delete_comment', 'sharingbox').'";
 		</script>');
 		
  		$gallerybox = Loader::package('gallerybox'); 
 	    if (is_object($gallerybox)) {
 			$this->set('form', $form);
 			$searchInstance = 'gbx' . time();
+			$this->set('searchInstance', $searchInstance);
 
 			$this->addHeaderItem($html->css('jquery.rating.css'));
 			$this->addHeaderItem($html->css('ccm.dialog.css'));
@@ -66,6 +68,7 @@ class SharingboxBlockController extends BlockController {
 			$this->addFooterItem($html->javascript('jquery.ui.js'));
 			$this->addFooterItem($html->javascript('jquery.form.js'));
 			$this->addFooterItem($html->javascript('jquery.rating.js'));
+			$this->addFooterItem($html->javascript('bootstrap.js'));
 			$this->addFooterItem($html->javascript('ccm.app.js'));
 			
 	
@@ -79,8 +82,8 @@ class SharingboxBlockController extends BlockController {
 			$this->addFooterItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\', \'' . $searchInstance . '\'); });</script>');
 		
 			$this->addHeaderItem('<script type="text/javascript">
-			var CWS_UPLOAD_TOOL = "'.Loader::helper('concrete/urls')->getToolsURL('photo_share', 'c5_wall_share').'";
-			var CWS_UPLOAD_COMPLETE = "'.Loader::helper('concrete/urls')->getToolsURL('photo_uploaded', 'c5_wall_share').'";
+			var CWS_UPLOAD_TOOL = "'.Loader::helper('concrete/urls')->getToolsURL('photo_share', 'sharingbox').'";
+			var CWS_UPLOAD_COMPLETE = "'.Loader::helper('concrete/urls')->getToolsURL('photo_uploaded', 'sharingbox').'";
 			var GBX_SET_TOOL = "'.Loader::helper('concrete/urls')->getToolsURL('user_add_to', 'gallerybox').'";
 			var GBX_COMPLETED_TOOL = "'.Loader::helper('concrete/urls')->getToolsURL('add_to_complete', 'gallerybox').'";
 			var GBX_SET_RELOAD = "'.Loader::helper('concrete/urls')->getToolsURL('search_user_sets_reload', 'gallerybox').'";
@@ -108,23 +111,21 @@ class SharingboxBlockController extends BlockController {
 			}
 	}
 	
-	public function status_share($statext, $sw, $blockArea, $cID){
+	public function status_share($statext, $sw){
 	$u = new User();
 	if($u->isRegistered()){	
 		$statext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($statext) );
 		
-		$wall = Loader::package('lerteco_wall');
-	
-		if (is_object($wall)) {
-			$wall_status = $this->prep_status_share($statext);
-			$wall->postAndPossiblyRegister($u->getUserID(), array($wall_status, $sw), $this->posting_type_status);
-		}
+		Loader::model('sb_post','sharingbox');
+		$poster = new SharingboxPost();
+		$wall_status = $this->prep_status_share($statext);
+		$poster->save_post($u->getUserID(), $wall_status, $sw, 1);
 		
-			$b = $this->getPageAreaBlock($blockArea, $cID);
+		
 		
 			
-			if ($_REQUEST['ajax'] == true) {	
-				$b->display('templates/commentable');
+			if ($_REQUEST['ajax'] == true) {
+				Loader::packageElement('sb_postings','sharingbox');	
 				exit;
 			} 
 		}
@@ -145,7 +146,8 @@ class SharingboxBlockController extends BlockController {
 			
 			$b = $this->getPageAreaBlock($blockArea, $cID);
 			if ($_REQUEST['ajax'] == true) {	
-				$b->display('templates/commentable');
+				Loader::packageElement('test','sharingbox');	
+				//$b->display('templates/commentable');
 				exit;
 			}
 		}
@@ -163,7 +165,8 @@ class SharingboxBlockController extends BlockController {
 		
 		$b = $this->getPageAreaBlock($blockArea, $cID);
 		if ($_REQUEST['ajax'] == true) {	
-			$b->display('templates/commentable');
+			Loader::packageElement('test','sharingbox');	
+				//$b->display('templates/commentable');
 			exit;
 		}
 

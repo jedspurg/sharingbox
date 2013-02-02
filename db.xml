@@ -13,6 +13,9 @@
 		</field>		
 		<field name="post" type="X2">
 		</field>
+		<field name="shareWith" type="I">
+			<default value="1"/>
+		</field>
 		<field name="entryDate" type="T">
 			<deftimestamp/>
 		</field>
