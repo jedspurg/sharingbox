@@ -6,17 +6,15 @@
 		Loader::model('users_friends');
 		$uh = Loader::helper('concrete/urls');
 
-	
-
 ?>
 
 <?php  
 if(is_array($postings)):
 	foreach ($postings as $posting):
-			
-		$user = $posting->getUserInfo();
-		$profile_url = $this->url('/profile','view', $user->getUserID());
-		$friendsData = UsersFriends::getUsersFriendsData($user->getUserID());
+	
+		$poster = UserInfo::getByID($posting['uID']);
+		$profile_url = $this->url('/profile','view', $poster->getUserID());
+		$friendsData = UsersFriends::getUsersFriendsData($poster->getUserID());
 		//set a default share if none is recorded
 		$data = unserialize($posting->pData);
 		$sw = $data[1];
@@ -30,7 +28,7 @@ if(is_array($postings)):
 			endfor;		
 		endif;
 		
-		if($myfriend || $sw == '2' || $u->getUserID() == $user->getUserID() || $u->isSuperUser()):
+		if($myfriend || $sw == '2' || $u->getUserID() == $poster->getUserID() || $u->isSuperUser()):
     ?>
         <li id ="cws-item-class_<?php echo $posting->pID?>" class="lerteco-wall-item">
         	<div class="wall-user-img">
@@ -43,10 +41,10 @@ if(is_array($postings)):
                 
                 
                 <?php  
-                if ($posting->getUserInfo()->getAttribute('first_name') == ''){
-                            $username = $posting->getUserInfo()->getUserName();
+                if ($poster->getAttribute('first_name') == ''){
+                            $username = $poster->getUserName();
                         }else{
-                            $username =  $posting->getUserInfo()->getAttribute('first_name').' '.$posting->getUserInfo()->getAttribute('last_name');
+                            $username =  $poster->getAttribute('first_name').' '.$poster->getAttribute('last_name');
                         }
                         
                         ?>
@@ -56,7 +54,7 @@ if(is_array($postings)):
                             <li><span class="time"><?php   echo $date->timeSince(strtotime($posting->pCreateDate)) ?> ago<?php  if($u->isRegistered()){?> - <a id="formshow_<?php  echo $posting->pID?>" class="cws-comment-bar" href="javascript:void(0);"><?php  echo t('comment')?></a><?php }?></span> </li>
                             <li><?php if ($sw == '2'){?><i class="icon-globe shared-everyone" title="<?php echo t('shared with everyone')?>"></i><?php }else{?><i class="icon-user shared-friends" title="<?php echo t('shared with friends')?>"></i><?php }?></li>
                             
-                            <?php if($u->getUserID() == $user->getUserID() or $u->isSuperUser()){?>
+                            <?php if($u->getUserID() == $poster->getUserID() or $u->isSuperUser()){?>
                             <li class="cws-edit-tools">
                             <?php if($posting->getType()->ptName != 'CWS-Photo'){?>
                             <i id="editPostTrigger_<?php echo $posting->pID?>" class="icon-edit cws-edit-post" title="<?php echo t('edit')?>"></i> 

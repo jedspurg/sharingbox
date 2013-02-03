@@ -1,5 +1,6 @@
 <?php  
 defined('C5_EXECUTE') or die(_("Access Denied."));
+Loader::model('sb_post','sharingbox');
 class SharingboxBlockController extends BlockController {
 	
 
@@ -7,9 +8,9 @@ class SharingboxBlockController extends BlockController {
 	protected $btTable = 'btSharingbox';
 	protected $btInterfaceWidth = "550";
 	protected $btInterfaceHeight = "200";
-	protected $posting_type_status = array('c5_wall_share', 'status_share', 'CWS-Status', '%1$s', 1, 2);
-	protected $posting_type_link = array('c5_wall_share', 'link_share', 'CWS-Link', '%1$s', 1, 2);
-	protected $posting_type_photo = array('c5_wall_share', 'photo_share', 'CWS-Photo', '%1$s', 1, 2);
+	//protected $posting_type_status = array('c5_wall_share', 'status_share', 'CWS-Status', '%1$s', 1, 2);
+	//protected $posting_type_link = array('c5_wall_share', 'link_share', 'CWS-Link', '%1$s', 1, 2);
+	//protected $posting_type_photo = array('c5_wall_share', 'photo_share', 'CWS-Photo', '%1$s', 1, 2);
 
 
 	/** 
@@ -39,6 +40,8 @@ class SharingboxBlockController extends BlockController {
 	function on_page_view() {
 		$html = Loader::helper('html');
 		$b = Block::getByName('sharingbox');
+		$postGetter = new SharingboxPost();
+		$this->set('postings', $postGetter->getPosts());
 		$this->addFooterItem('
 		<script type="text/javascript">
 		var CWS_TOOLS_DIR = "'.Loader::helper('concrete/urls')->getBlockTypeToolsURL($b).'sharingbox/";
@@ -116,10 +119,11 @@ class SharingboxBlockController extends BlockController {
 	if($u->isRegistered()){	
 		$statext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($statext) );
 		
-		Loader::model('sb_post','sharingbox');
+		
 		$poster = new SharingboxPost();
+		$handle = 'sb_status';
 		$wall_status = $this->prep_status_share($statext);
-		$poster->save_post($u->getUserID(), $wall_status, $sw, 1);
+		$poster->savePost($u->getUserID(), $wall_status, $sw, $handle);
 		
 		
 		

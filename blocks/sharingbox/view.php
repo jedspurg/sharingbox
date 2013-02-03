@@ -81,14 +81,13 @@ if (is_object($gallerybox)) {
 <div id="commentable_lerteco_wall" class="wall-share-wrap">
 <div class="loading"></div>
 <ul class="lerteco_wall">
-<?php Loader::packageElement('sb_postings','sharingbox');?>
+<?php Loader::packageElement('sb_postings','sharingbox', array('postings'=>$postings));?>
 </ul>
 
 </div>
 
-<script>
-readyCommentStream();
-	
+<script type="text/javascript">
+readyCommentStream();	
 </script>
 
-
+ß

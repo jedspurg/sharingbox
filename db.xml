@@ -8,13 +8,27 @@
 		<field name="uID" type="I">
 			<default value="0"/>
 		</field>
-		<field name="postType" type="I">
-			<default value="1"/>
+		<field name="postTemplate" type="C" size="100">
 		</field>		
 		<field name="post" type="X2">
 		</field>
 		<field name="shareWith" type="I">
 			<default value="1"/>
+		</field>
+		<field name="entryDate" type="T">
+			<deftimestamp/>
+		</field>
+	</table>
+	<table name="SharingboxPostTemplates">
+ 		<field name="templateID" type="I">
+			<key />
+			<autoincrement/>
+		</field>
+		<field name="handle" type="C" size="100">
+		</field>
+		<field name="template" type="X2">
+		</field>
+		<field name="description" type="X2">
 		</field>
 		<field name="entryDate" type="T">
 			<deftimestamp/>
