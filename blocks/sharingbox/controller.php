@@ -33,8 +33,15 @@ class SharingboxBlockController extends BlockController {
 	
 	}
 	
-	private function getPosts(){
-		return $this->sbModel->getPosts();
+	private function getPosts($offset = 0, $uID = null){
+		return $this->sbModel->getPosts($offset,$uID);
+	}
+	
+	public function loadMorePosts($offset){
+		if ($_REQUEST['ajax'] == true) {
+				print Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts($offset)));	
+				exit;
+			}
 	}
 
 	function on_page_view() {
@@ -44,12 +51,13 @@ class SharingboxBlockController extends BlockController {
 		
 		$this->addFooterItem('
 		<script type="text/javascript">
-		var CWS_TOOLS_DIR = "'.Loader::helper('concrete/urls')->getToolsURL(null, 'sharingbox').'";
-		var CWS_COMMENT_HELPER = "'.Loader::helper('concrete/urls')->getToolsURL('add_comment', 'sharingbox').'";
-		var CWS_UPDATE_COMMENT = "'.Loader::helper('concrete/urls')->getToolsURL('update_comment', 'sharingbox').'";
-		var CWS_POST_UPDATE = "'.Loader::helper('concrete/urls')->getToolsURL('update_post', 'sharingbox').'";
-		var CWS_POST_DELETE = "'.Loader::helper('concrete/urls')->getToolsURL('delete_post', 'sharingbox').'";
-		var CWS_COMMENT_DELETE = "'.Loader::helper('concrete/urls')->getToolsURL('delete_comment', 'sharingbox').'";
+		var SB_TOOLS_DIR = "'.Loader::helper('concrete/urls')->getToolsURL(null, 'sharingbox').'";
+		var SB_COMMENT_HELPER = "'.Loader::helper('concrete/urls')->getToolsURL('add_comment', 'sharingbox').'";
+		var SB_UPDATE_COMMENT = "'.Loader::helper('concrete/urls')->getToolsURL('update_comment', 'sharingbox').'";
+		var SB_POST_UPDATE = "'.Loader::helper('concrete/urls')->getToolsURL('update_post', 'sharingbox').'";
+		var SB_POST_DELETE = "'.Loader::helper('concrete/urls')->getToolsURL('delete_post', 'sharingbox').'";
+		var SB_COMMENT_DELETE = "'.Loader::helper('concrete/urls')->getToolsURL('delete_comment', 'sharingbox').'";
+		var SB_POST_LOADER = "'.Loader::helper('concrete/urls')->getToolsURL('post_loader', 'sharingbox').'";
 		</script>');
 		
 		$gallerybox = Loader::package('gallerybox'); 
@@ -67,11 +75,11 @@ class SharingboxBlockController extends BlockController {
 			$this->addHeaderItem($html->css('jquery.ui.css'));
 			
 			$this->addHeaderItem('<script type="text/javascript">
-			var CWS_UPLOAD_TOOL = "'.Loader::helper('concrete/urls')->getToolsURL('photo_share', 'sharingbox').'";
-			var CWS_UPLOAD_COMPLETE = "'.Loader::helper('concrete/urls')->getToolsURL('photo_uploaded', 'sharingbox').'";
+			var SB_UPLOAD_COMPLETE = "'.Loader::helper('concrete/urls')->getToolsURL('photo_uploaded', 'sharingbox').'";
 			var GBX_SET_TOOL = "'.Loader::helper('concrete/urls')->getToolsURL('user_add_to', 'gallerybox').'";
 			var GBX_COMPLETED_TOOL = "'.Loader::helper('concrete/urls')->getToolsURL('add_to_complete', 'gallerybox').'";
 			var GBX_SET_RELOAD = "'.Loader::helper('concrete/urls')->getToolsURL('search_user_sets_reload', 'gallerybox').'";
+			var offset = 0;
 			</script>');
 	
 			$c = Page::getCurrentPage();

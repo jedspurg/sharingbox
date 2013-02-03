@@ -10,11 +10,11 @@ class SharingboxPost extends Model{
 		$this->db = Loader::db();
 	}
 	
-	public function getPosts($limit = 0, $uID = null){
+	public function getPosts($offset, $uID){
 		$sql = "SELECT * FROM SharingboxPosts";
 		if($uID){$sql .= " WHERE uID = '$uID'";}
 		$sql .= " ORDER BY entryDate DESC";
-		$sql .= " LIMIT $limit, 20";
+		$sql .= " LIMIT $offset, 10";
 		$results = $this->db->query($sql);
 		$returnArray = array();
 		while ($row=$results->fetchrow()) {

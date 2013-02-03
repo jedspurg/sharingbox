@@ -2064,7 +2064,7 @@ cwsCloseModal = function(){
 
 
 cwsuploadComplete = function() {
-	var url = CWS_UPLOAD_COMPLETE + '?ajax=1';
+	var url = SB_UPLOAD_COMPLETE + '?ajax=1';
 	$(function() {
 		$.get(url, function(r) {
 			$('div#commentable_lerteco_wall').before(r).remove();
@@ -2169,7 +2169,7 @@ function readyCommentStream(){
 		
 		var pID = $(this).attr("id").match(/[\d]+$/);
 
-		var url = CWS_POST_DELETE + '/?pID=' + pID + '&ajax=1';
+		var url = SB_POST_DELETE + '/?pID=' + pID + '&ajax=1';
 		$.get(url, function(r) {
 			$('.modal-backdrop').hide();
 			$('.modal').hide();
@@ -2187,7 +2187,7 @@ function readyCommentStream(){
 		var comtext = $("input#comment-edit_" + commID).val();
 		var pID = $("input#commpID_" + commID).val();
 		
-		var url = CWS_UPDATE_COMMENT + '/?pID=' + pID + '&commID=' + commID + '&comtext=' + comtext + '&ajax=1';
+		var url = SB_UPDATE_COMMENT + '/?pID=' + pID + '&commID=' + commID + '&comtext=' + comtext + '&ajax=1';
 		$.get(url, function(r) {
 			$('div.cws-comments_' + pID).before(r).remove();
 			$('div.cws-comments_' + pID).effect("highlight", {}, 800);
@@ -2257,7 +2257,7 @@ function readyCommentStream(){
 		
 		var commID = $(this).attr("id").match(/[\d]+$/);
 
-		var url = CWS_COMMENT_DELETE + '/?commID=' + commID + '&ajax=1';
+		var url = SB_COMMENT_DELETE + '/?commID=' + commID + '&ajax=1';
 		$.get(url, function(r) {
 			$('.modal-backdrop').hide();
 			$('.modal').hide();
@@ -2286,7 +2286,7 @@ function readyCommentStream(){
 		}
 	  	
 
-		var url = CWS_POST_UPDATE + '?pID=' + pID + '&pType=' + pType +'&statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&ajax=1';
+		var url = SB_POST_UPDATE + '?pID=' + pID + '&pType=' + pType +'&statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&ajax=1';
 		
 		 $.get(url, function(r) {
 			  $('div#commentable_lerteco_wall').before(r).remove();
@@ -2322,7 +2322,7 @@ function readyCommentStream(){
 
 function postComment(pID){
 	var comtext = $("input#cwsComment_" + pID).val();
-	var url = CWS_COMMENT_HELPER + '/?pID=' + pID + '&comtext=' + comtext + '&ajax=1';
+	var url = SB_COMMENT_HELPER + '/?pID=' + pID + '&comtext=' + comtext + '&ajax=1';
 
 	$.get(url, function(r) {
 		$('div.cws-comments_' + pID).before(r).remove();
@@ -2331,9 +2331,19 @@ function postComment(pID){
 	return false;
 }
 
+function loadMorePosts(){	
+	offset += 10;
+	var url = SB_POST_LOADER + '/?offset=' + offset + '&ajax=1';
+	$.get(url, function(r) {
+		$('#more-posts').append(r);
+	});	
+			
+	return false;
+}
+
 	  
 $(document).ready(function() {
-	
+
 	$("#status-post").on('click', function() {
 	  $(".loading").show();
 	  $("#statlinkcomment-wrap").hide();
@@ -2341,23 +2351,17 @@ $(document).ready(function() {
 	  var statlinkcomment = $("input#statlinkcomment").val();
 	  var sw = $("input#sw").val();
 	  var statext = $("input#statext").val();
-	  var url = CWS_TOOLS_DIR + action + '?statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&ajax=1';
-		  $.get(url, function(r) {
-			  $('div#commentable_lerteco_wall').before(r).remove();
-		  });
-		  $("input#statext").val('What\'s on your mind?');
-		  $("input#statext").css('color', '#999999');
+	  var url = SB_TOOLS_DIR + action + '?statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&ajax=1';
+		$.get(url, function(r) {
+			$('div#commentable_lerteco_wall').before(r).remove();
+		});
+		$("input#statext").val('What\'s on your mind?');
+		$("input#statext").css('color', '#999999');
 	  return false;
-	  
-	  
-	  });
-	  
-	  
-	
+	});
 	
 	readyCommentStream();
 	
-		
 });
 
 

@@ -73,6 +73,8 @@ if (is_object($gallerybox)) {
 <?php }?>
 
 <?php Loader::packageElement('sb_postings','sharingbox', array('postings'=>$postings));?>
+<div id="more-posts"></div>
+<button onClick="loadMorePosts()" class="btn btn-primary">Load More Posts</button>
 
 
 
