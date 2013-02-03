@@ -16,7 +16,8 @@
 			<default value="1"/>
 		</field>
 		<field name="entryDate" type="T">
-			<deftimestamp/>
+		</field>
+		<field name="updatedDate" type="T">
 		</field>
 	</table>
 	<table name="SharingboxPostTemplates">
@@ -29,9 +30,6 @@
 		<field name="template" type="X2">
 		</field>
 		<field name="description" type="X2">
-		</field>
-		<field name="entryDate" type="T">
-			<deftimestamp/>
 		</field>
 	</table>
   <table name="SharingboxComments">
@@ -47,6 +45,9 @@
 		<field name="commentText" type="X2">
 		</field>
 		<field name="entryDate" type="T">
+			<deftimestamp/>
+		</field>
+		<field name="updatedDate" type="T">
 			<deftimestamp/>
 		</field>
 	</table>

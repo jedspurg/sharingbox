@@ -1,11 +1,7 @@
 <?php 
-$c = Page::getCurrentPage();
-$u = new User();?>
-<script>
-var blockArea = '<?php echo $this->block->getAreaHandle()?>';
-var cID = '<?php echo $c->getCollectionID()?>';
-</script>
-<?php if($u->isRegistered()){?>
+defined('C5_EXECUTE') or die("Access Denied.");
+$u = new User();
+if($u->isRegistered()){?>
 <div id="cws-share-wrapper" class="wall-share-wrap">
     <div class="well">
         <div id="share-bar">
@@ -72,22 +68,14 @@ var cID = '<?php echo $c->getCollectionID()?>';
 if (is_object($gallerybox)) {
 	Loader::packageElement('sb_gb_uploader','sharingbox', array('searchInstance' => $searchInstance));
 }
-?>
-
-            
+?>            
 </div>
 <?php }?>
 
-<div id="commentable_lerteco_wall" class="wall-share-wrap">
-<div class="loading"></div>
-<ul class="lerteco_wall">
 <?php Loader::packageElement('sb_postings','sharingbox', array('postings'=>$postings));?>
-</ul>
 
-</div>
 
-<script type="text/javascript">
-readyCommentStream();	
-</script>
 
-ß
+
+
+

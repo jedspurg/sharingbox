@@ -16,10 +16,6 @@ $valt = Loader::helper('validation/token');
 
 ?>
 
-<script type="text/javascript" src="<?php  echo ASSETS_URL_JAVASCRIPT?>/swfupload/swfupload.js"></script>
-<script type="text/javascript" src="<?php  echo ASSETS_URL_JAVASCRIPT?>/swfupload/swfupload.handlers.js"></script>
-<script type="text/javascript" src="<?php  echo ASSETS_URL_JAVASCRIPT?>/swfupload/swfupload.fileprogress.js"></script>
-<script type="text/javascript" src="<?php  echo ASSETS_URL_JAVASCRIPT?>/swfupload/swfupload.queue.js"></script>
 
 <script type="text/javascript">
 var ccm_fiActiveTab = "ccm-file-upload-multiple";
@@ -41,11 +37,9 @@ $umf = str_ireplace(array('M', 'K', 'G'), array(' MB', 'KB', ' GB'), $umf);
 
 <script type="text/javascript">
 
+
 var swfu;
 $(function() { 
-
-
-
 	swfu = new SWFUpload({
 
 		flash_url : "<?php    echo ASSETS_URL_FLASH?>/swfupload/swfupload.swf",
@@ -125,13 +119,14 @@ $(function() {
 				this.debug(ex);
 			}		
 		},
-		upload_complete_handler : uploadComplete, 
+		upload_complete_handler : '', 
 		queue_complete_handler : function(file){
 			// queueComplete() from swfupload.handlers.js
 			//console.log(ccm_uploadedFiles.length);
 			if (ccm_uploadedFiles.length > 0) {
 				queueComplete();
-				ccm_filesUploadedDialog('<?php    echo $searchInstance?>'); 
+				cws_filesUploadedDialog('<?php    echo $searchInstance?>'); 
+				cwsCloseModal();
 					
 			}
 		}
@@ -141,9 +136,7 @@ $(function() {
 });
 </script>
 
-<style type="text/css">
 
-</style>
 
 <form id="form1" action="<?php  echo DISPATCHER_FILENAME?>" method="post" enctype="multipart/form-data">
 		

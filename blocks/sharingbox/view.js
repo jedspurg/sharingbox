@@ -2064,7 +2064,7 @@ cwsCloseModal = function(){
 
 
 cwsuploadComplete = function() {
-	var url = CWS_UPLOAD_COMPLETE + '?blockArea=' + blockArea + '&cID=' + cID + '&ajax=1';
+	var url = CWS_UPLOAD_COMPLETE + '?ajax=1';
 	$(function() {
 		$.get(url, function(r) {
 			$('div#commentable_lerteco_wall').before(r).remove();
@@ -2286,7 +2286,7 @@ function readyCommentStream(){
 		}
 	  	
 
-		var url = CWS_POST_UPDATE + '?pID=' + pID + '&pType=' + pType +'&statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&blockArea=' + blockArea + '&cID=' + cID + '&ajax=1';
+		var url = CWS_POST_UPDATE + '?pID=' + pID + '&pType=' + pType +'&statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&ajax=1';
 		
 		 $.get(url, function(r) {
 			  $('div#commentable_lerteco_wall').before(r).remove();
@@ -2341,7 +2341,7 @@ $(document).ready(function() {
 	  var statlinkcomment = $("input#statlinkcomment").val();
 	  var sw = $("input#sw").val();
 	  var statext = $("input#statext").val();
-	  var url = CWS_TOOLS_DIR + action + '?statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&blockArea=' + blockArea + '&cID=' + cID + '&ajax=1';
+	  var url = CWS_TOOLS_DIR + action + '?statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&ajax=1';
 		  $.get(url, function(r) {
 			  $('div#commentable_lerteco_wall').before(r).remove();
 		  });

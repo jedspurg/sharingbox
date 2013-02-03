@@ -1,15 +1,16 @@
-<?php  $u = new User();?>
+<?php  
+$u = new User();
+$cui = UserInfo::getByID($u->getUserID());
+$av = Loader::helper('concrete/avatar');
+$date = Loader::helper('date');
+?>
 <div class="clear"></div>
   <div class="cws-comments_<?php  echo $pID?> cws-comments">
   	<div class="cws-user-comments">
                  
- <?php  
-					$comments = $this->controller->getComments($pID);
-					$postUserID = $this->controller->getPostUserID($pID);
-
-					$date = Loader::helper('date');
-					for($i = 0;$i < count($comments);$i++){
-					$comui = UserInfo::getByID($comments[$i]['uID']);
+<?php  		
+for($i = 0;$i < count($comments);$i++){
+$comui = UserInfo::getByID($comments[$i]['uID']);
 ?>
 
 <div id ="cws-wall-post-comment_<?php echo $comments[$i]['commentID']?>" class="cws-wall-post-comment">

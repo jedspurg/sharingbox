@@ -8,11 +8,8 @@ class SharingboxBlockController extends BlockController {
 	protected $btTable = 'btSharingbox';
 	protected $btInterfaceWidth = "550";
 	protected $btInterfaceHeight = "200";
-	//protected $posting_type_status = array('c5_wall_share', 'status_share', 'CWS-Status', '%1$s', 1, 2);
-	//protected $posting_type_link = array('c5_wall_share', 'link_share', 'CWS-Link', '%1$s', 1, 2);
-	//protected $posting_type_photo = array('c5_wall_share', 'photo_share', 'CWS-Photo', '%1$s', 1, 2);
-
-
+	protected $sbModel;
+	
 	/** 
 	 * Used for localization. If we want to localize the name/description we have to include this
 	 */
@@ -24,27 +21,30 @@ class SharingboxBlockController extends BlockController {
 		return t("SharingBox");
 	}
 	
-
-	
-	function __construct($obj = null) {		
+	public function __construct($obj = null) {		
 		parent::__construct($obj);
 		$this->db = Loader::db();
+		$this->sbModel = new SharingboxPost();
 		$u = new User();
 
 	}	
 	
-	function view() { 
+	public function view() { 
 	
+	}
+	
+	private function getPosts(){
+		return $this->sbModel->getPosts();
 	}
 
 	function on_page_view() {
 		$html = Loader::helper('html');
 		$b = Block::getByName('sharingbox');
-		$postGetter = new SharingboxPost();
-		$this->set('postings', $postGetter->getPosts());
+		$this->set('postings', $this->getPosts());
+		
 		$this->addFooterItem('
 		<script type="text/javascript">
-		var CWS_TOOLS_DIR = "'.Loader::helper('concrete/urls')->getBlockTypeToolsURL($b).'sharingbox/";
+		var CWS_TOOLS_DIR = "'.Loader::helper('concrete/urls')->getToolsURL(null, 'sharingbox').'";
 		var CWS_COMMENT_HELPER = "'.Loader::helper('concrete/urls')->getToolsURL('add_comment', 'sharingbox').'";
 		var CWS_UPDATE_COMMENT = "'.Loader::helper('concrete/urls')->getToolsURL('update_comment', 'sharingbox').'";
 		var CWS_POST_UPDATE = "'.Loader::helper('concrete/urls')->getToolsURL('update_post', 'sharingbox').'";
@@ -52,8 +52,8 @@ class SharingboxBlockController extends BlockController {
 		var CWS_COMMENT_DELETE = "'.Loader::helper('concrete/urls')->getToolsURL('delete_comment', 'sharingbox').'";
 		</script>');
 		
- 		$gallerybox = Loader::package('gallerybox'); 
-	    if (is_object($gallerybox)) {
+		$gallerybox = Loader::package('gallerybox'); 
+		if (is_object($gallerybox)):
 			$this->set('form', $form);
 			$searchInstance = 'gbx' . time();
 			$this->set('searchInstance', $searchInstance);
@@ -65,25 +65,7 @@ class SharingboxBlockController extends BlockController {
 			$this->addHeaderItem($html->css('ccm.search.css'));
 			$this->addHeaderItem($html->css('ccm.filemanager.css'));
 			$this->addHeaderItem($html->css('jquery.ui.css'));
-	
-
-			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
-			$this->addFooterItem($html->javascript('jquery.ui.js'));
-			$this->addFooterItem($html->javascript('jquery.form.js'));
-			$this->addFooterItem($html->javascript('jquery.rating.js'));
-			$this->addFooterItem($html->javascript('bootstrap.js'));
-			$this->addFooterItem($html->javascript('ccm.app.js'));
 			
-	
-			global $c;
-			$cID = $c->getCollectionID();
-
-			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $cID . '&amp;cvID=' . $cvID . '&amp;btask=' . $_REQUEST['btask'] . '&amp;ts=' . time() . '"></script>'); 
-
-			$this->addFooterItem($html->javascript('user.filemanager.js', 'gallerybox'));
-
-			$this->addFooterItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\', \'' . $searchInstance . '\'); });</script>');
-		
 			$this->addHeaderItem('<script type="text/javascript">
 			var CWS_UPLOAD_TOOL = "'.Loader::helper('concrete/urls')->getToolsURL('photo_share', 'sharingbox').'";
 			var CWS_UPLOAD_COMPLETE = "'.Loader::helper('concrete/urls')->getToolsURL('photo_uploaded', 'sharingbox').'";
@@ -91,113 +73,76 @@ class SharingboxBlockController extends BlockController {
 			var GBX_COMPLETED_TOOL = "'.Loader::helper('concrete/urls')->getToolsURL('add_to_complete', 'gallerybox').'";
 			var GBX_SET_RELOAD = "'.Loader::helper('concrete/urls')->getToolsURL('search_user_sets_reload', 'gallerybox').'";
 			</script>');
-		
-		}
-
-	}
-
-	function delete(){
-	}
 	
-	private function getPageAreaBlock($area, $cID){
-			$c = Page::getByID($cID);
-			$a = new Area($area);
-			$blocks = $a->getAreaBlocksArray($c);
-			if(is_array($blocks) && count($blocks) > 0) {
-				foreach($blocks as $b) {
-					if($b->getBlockTypeHandle() == 'lerteco_wall') {
-						$bID = $b->getBlockID();
-						$block = Block::getByID($bID, $c, $area);
-						return $block;
-					}	
-				}
-			}
+			$c = Page::getCurrentPage();
+			$cID = $c->getCollectionID();
+
+			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/page_controls_menu_js?cID=' . $cID . '&amp;cvID=' . $cvID . '&amp;btask=' . $_REQUEST['btask'] . '&amp;ts=' . time() . '"></script>'); 
+			$this->addFooterItem('<script type="text/javascript" src="' . REL_DIR_FILES_TOOLS_REQUIRED . '/i18n_js"></script>'); 
+			$this->addFooterItem($html->javascript('jquery.ui.js'));
+			$this->addFooterItem($html->javascript('jquery.form.js'));
+			$this->addFooterItem($html->javascript('jquery.rating.js'));
+			$this->addFooterItem($html->javascript('bootstrap.js'));
+			$this->addFooterItem($html->javascript('ccm.app.js'));
+			$this->addFooterItem($html->javascript('user.filemanager.js', 'gallerybox'));
+			$this->addFooterItem($html->javascript('swfupload/swfupload.js'));
+			$this->addFooterItem($html->javascript('swfupload/swfupload.handlers.js'));
+			$this->addFooterItem($html->javascript('swfupload/swfupload.fileprogress.js'));
+			$this->addFooterItem($html->javascript('swfupload/swfupload.queue.js'));
+			$this->addFooterItem('<script type="text/javascript">$(function() { ccm_activateFileManager(\'DASHBOARD\', \'' . $searchInstance . '\'); });</script>');	
+		endif;
+
 	}
 	
 	public function status_share($statext, $sw){
-	$u = new User();
-	if($u->isRegistered()){	
-		$statext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($statext) );
-		
-		
-		$poster = new SharingboxPost();
-		$handle = 'sb_status';
-		$wall_status = $this->prep_status_share($statext);
-		$poster->savePost($u->getUserID(), $wall_status, $sw, $handle);
-		
-		
-		
-			
-			if ($_REQUEST['ajax'] == true) {
-				Loader::packageElement('sb_postings','sharingbox');	
-				exit;
-			} 
-		}
+		$u = new User();
+		if($u->isRegistered()){	
+			$statext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($statext) );
+			$handle = 'sb_status';
+			$wall_status = $this->prep_status_share($statext);
+			$this->sbModel->savePost($u->getUserID(), $wall_status, $sw, $handle);
+				if ($_REQUEST['ajax'] == true) {
+					Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts()));	
+					exit;
+				} 
+			}
 	}
 	
-	public function link_share($statext, $statlinkcomment, $sw, $blockArea, $cID){
-	
-	$u=new User();
-	if($u->isRegistered()){	
-		$wall = Loader::package('lerteco_wall');
-		
-		if (is_object($wall)) {
-			
+	public function link_share($statext, $statlinkcomment, $sw){
+		$u=new User();
+		if($u->isRegistered()){	
+			$handle = 'sb_link';
 			$wall_link = $this->prep_link_share($statext, $statlinkcomment);
-			$wall->postAndPossiblyRegister($u->getUserID(), array($wall_link, $sw), $this->posting_type_link);
-			
-		}
-			
-			$b = $this->getPageAreaBlock($blockArea, $cID);
-			if ($_REQUEST['ajax'] == true) {	
-				Loader::packageElement('test','sharingbox');	
-				//$b->display('templates/commentable');
+			$this->sbModel->savePost($u->getUserID(), $wall_link, $sw, $handle);
+			if ($_REQUEST['ajax'] == true) {
+				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts()));	
 				exit;
 			}
 		}
 	}
 	
-	public function update_link_share($pID, $statext, $statlinkcomment, $sw, $blockArea, $cID){
-		
-		$wall_link = $this->prep_link_share($statext, $statlinkcomment);
-		$data = array($wall_link,$sw);
-		$unsanitized = serialize($data);
-		$pData = mysql_real_escape_string($unsanitized);
-		$db = Loader::db();
-		$sql="UPDATE LWPostings SET pData = '$pData' WHERE pID = '$pID'"; 
-		$db->execute($sql);
-		
-		$b = $this->getPageAreaBlock($blockArea, $cID);
-		if ($_REQUEST['ajax'] == true) {	
-			Loader::packageElement('test','sharingbox');	
-				//$b->display('templates/commentable');
-			exit;
-		}
-
+	public function update_link_share($pID, $statext, $statlinkcomment, $sw){
+		$wall_link = $this->prep_link_share($statext, $statlinkcomment);	
+		$this->sbModel->updatePost($pID, $wall_link, $sw);
+		if ($_REQUEST['ajax'] == true) {
+				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts()));	
+				exit;
+			}
 	}
 	
-	public function update_status_share($pID, $statext, $sw, $blockArea, $cID){
-
+	public function update_status_share($pID, $statext, $sw){
+		$statext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($statext) );
 		$wall_status = $this->prep_status_share($statext);
-		$data = array($wall_status,$sw);
-		$unsanitized = serialize($data);
-		$pData = mysql_real_escape_string($unsanitized);
-		$db = Loader::db();
-		$sql="UPDATE LWPostings SET pData = '$pData' WHERE pID = '$pID'"; 
-		$db->execute($sql);
-		
-		$b = $this->getPageAreaBlock($blockArea, $cID);
-		if ($_REQUEST['ajax'] == true) {	
-			$b->display('templates/commentable');
-			exit;
-		}
+		$this->sbModel->updatePost($pID, $wall_status, $sw);
+		if ($_REQUEST['ajax'] == true) {
+				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts()));	
+				exit;
+			}
 
 	}
 	
 	private function prep_status_share($statext){
-		
 		$wall_status = '<span class="cws-status-post">'.$statext.'</span>';
-		
 		return $wall_status;
 	}
 	
@@ -219,34 +164,18 @@ class SharingboxBlockController extends BlockController {
 		
 	}
 	
-	
-	
 	public function delete_post($pID){
-		
-		
-		$db = Loader::db();
-		$sql="DELETE FROM LWPostings WHERE pID = '$pID'"; 
-		$db->execute($sql);
-		
-		$sql="DELETE FROM btCWShareComments WHERE pID = '$pID'"; 
-		$db->execute($sql);
-	
- 
+		$this->sbModel->deletePost($pID);
 	}
 	
-	
-	
-	
-	
-	public function photo_share($uID,$numFiles, $sw, $blockArea, $cID){
+	public function photo_share($uID,$numFiles,$sw){
 		Loader::helper('concrete/file');
 		Loader::model('file_attributes');
 		Loader::library('file/types');
 		Loader::model('file_list');
 		Loader::model('file_set');
+		$handle = 'sb_photo';
 		
-	
-		$wall = Loader::package('lerteco_wall');
 		$fs = FileSet::getByName('user_gallery_'.$uID);
 		$fileList = new FileList();		
 		$fileList->filterBySet($fs);
@@ -255,12 +184,8 @@ class SharingboxBlockController extends BlockController {
 		$fldca = new FileManagerAvailableColumnSet();
 
 		$columns = new FileManagerColumnSet();
-
 		$sortCol = $fldca->getColumnByKey('fDateAdded');
 		$columns->setDefaultSortColumn($sortCol, 'desc');
-
-		
-
 		$col = $columns->getDefaultSortColumn();	
 		$fileList->sortBy($col->getColumnKey(), $col->getColumnDefaultSortDirection());
 			if($numFiles > 3){
@@ -304,20 +229,12 @@ class SharingboxBlockController extends BlockController {
 		}
 		$sharedImageList .='</div><div class="clear"></div>';
 
-		
-	if (is_object($wall) && $numFiles > 0) {
-
-	$wall->postAndPossiblyRegister($uID, array($sharedImageList, 2), $this->posting_type_photo);
+		$this->sbModel->savePost($uID, $sharedImageList, $sw, $handle);
+		if ($_REQUEST['ajax'] == true) {
+			Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts()));	
+			exit;
+		} 
 	}
-		
-			$b = $this->getPageAreaBlock($blockArea, $cID);
-			if ($_REQUEST['ajax'] == true) {	
-				$b->display('templates/commentable');
-				exit;
-			}
-	}
-	
-	
 	
 	private function getUrlData($url){
 		$result = false;
@@ -325,29 +242,23 @@ class SharingboxBlockController extends BlockController {
 		if (isset($extpage['content']) && is_string($extpage['content'])){
 			$title = null;
 			$metaTags = null;
+			
 			preg_match('/<title>([^>]*)<\/title>/si', $extpage['content'], $match );
-			if (isset($match) && is_array($match) && count($match) > 0)
-			{
+			if (isset($match) && is_array($match) && count($match) > 0){
 				$title = strip_tags($match[1]);
 			}
 			preg_match_all('/<[\s]*meta[\s]*name="?' . '([^>"]*)"?[\s]*' . 'content="?([^>"]*)"?[\s]*[\/]?[\s]*>/si', $extpage['content'], $match);
 		   
-			if (isset($match) && is_array($match) && count($match) == 3)
-			{
+			if (isset($match) && is_array($match) && count($match) == 3){
 				$originals = $match[0];
 				$names = $match[1];
 				$values = $match[2];
 			   
-				if (count($originals) == count($names) && count($names) == count($values))
-				{
+				if (count($originals) == count($names) && count($names) == count($values)){
 					$metaTags = array();
-				   
-					for ($i=0, $limiti=count($names); $i < $limiti; $i++)
-					{
-						$metaTags[strtolower($names[$i])] = array (
-							'html' => htmlentities($originals[$i]),
-							'value' => $values[$i]
-						);
+
+					for ($i=0, $limiti=count($names); $i < $limiti; $i++){
+						$metaTags[strtolower($names[$i])] = array ('html' => htmlentities($originals[$i]),'value' => $values[$i]);
 					}
 				}
 			}
@@ -356,15 +267,13 @@ class SharingboxBlockController extends BlockController {
 				'title' => $title,
 				'metaTags' => $metaTags
 			);
-		}
-	   
+		}	   
 		return $result;
 	}
 	
-	private function getUrlContents($url)
-	{
+	private function getUrlContents($url){
+		
 		$result = false;
-
 		$options = array(
         CURLOPT_RETURNTRANSFER => true,     // return web page
         CURLOPT_HEADER         => false,    // don't return headers
@@ -376,12 +285,13 @@ class SharingboxBlockController extends BlockController {
         CURLOPT_TIMEOUT        => 120,      // timeout on response
         CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
     	);
-		$ch = curl_init( $url );
-		curl_setopt_array( $ch, $options );
-		$content = curl_exec( $ch );
-		$err  = curl_errno( $ch );
-		$errmsg = curl_error( $ch );
-		$header = curl_getinfo( $ch );
+			
+		$ch = curl_init($url);
+		curl_setopt_array($ch, $options);
+		$content = curl_exec($ch);
+		$err  = curl_errno($ch);
+		$errmsg = curl_error($ch);
+		$header = curl_getinfo($ch);
 		curl_close( $ch );
 	
 		$header['errno']   = $err;
@@ -390,80 +300,49 @@ class SharingboxBlockController extends BlockController {
 		return $header;
 	}
 	
-		public function getPostUserID($pID){
-		$db = Loader::db();
-		$ic = $db->query("SELECT pUID FROM LWPostings where pID = '$pID'");
-		$row = $ic->fetchrow();
-		$uID = $row['pUID'];
-		return $uID;
+	public function getPostUserID($pID){
+		return $this->sbModel->getPosterUserID($pID);
 	}
 	
 	public function getComments($pID){
-		$db = Loader::db();
-		$ic = $db->query("SELECT * FROM btCWShareComments where pID = '$pID'");
-		while($row=$ic->fetchrow()){
-			$comments[] = $row;
-		}		
-
-		return $comments;
+		return $this->sbModel->getComments($pID);
 	}
 	
-	function add_comment($pID, $comtext){
-	$u=new User();
-	if($u->isRegistered()){	
-		$comtext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', $comtext );
-	
-			$data = array('pID' => $pID, 'comUID' => $u->getUserID(), 'cwsComment' => addslashes($comtext));
-			$this->saveComment($data);
-			if ($_REQUEST['ajax'] == true) {
-					$bt = BlockType::getByHandle('cws_comments');
-					$bt->controller->set('pID', $pID);
-					$bt->render('view');
-				exit;
-			} 
-	}
-		
-
-		
+	public function add_comment($pID, $comtext){
+		$u=new User();
+		if($u->isRegistered()){	
+			$comtext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', $comtext );
+				$data = array('pID' => $pID, 'comUID' => $u->getUserID(), 'cwsComment' => addslashes($comtext));
+				$this->saveComment($data);
+				if ($_REQUEST['ajax'] == true) {
+					$comments = $this->getComments($pID);
+					$postUserID = $this->getPostUserID($pID);
+					Loader::packageElement('sb_comments','sharingbox', array('comments'=>$comments,'postUserID'=>$postUserID,'pID'=>$pID));
+					exit;
+				} 
+		}
 	}
 	
 	private function saveComment($data) {
 		$u = new User();
 		if($u->isRegistered()){
-			$db= Loader::db();
-			$q = ("INSERT INTO btCWShareComments (pID, uID, commentText) VALUES (?,?,?)");
-			$db->EXECUTE($q,$data);
+			$this->sbModel->saveComment($data);
 		}
-
-
 	}
 	
-	public function delete_comment($commID){
-		$db = Loader::db();
-		$sql="DELETE FROM btCWShareComments WHERE commentID = '$commID'"; 
-		$db->execute($sql);
-	
- 
+	public function deleteComment($commID){		
+		$this->sbModel->deleteComment($commID);
 	}
 	
-	public function update_comment($pID, $commID, $commText){
+	public function updateComment($pID, $commID, $commText){
 		$commText = addslashes($commText);
-		$db = Loader::db();
-		$sql="UPDATE btCWShareComments SET commentText = '$commText' WHERE commentID = '$commID'"; 
-		$db->execute($sql);
-		
+		$this->sbModel->updateComment($pID, $commID, $commText);
 		if ($_REQUEST['ajax'] == true) {
-					$bt = BlockType::getByHandle('cws_comments');
-					$bt->controller->set('pID', $pID);
-					$bt->render('view');
+					$comments = $this->getComments($pID);
+					$postUserID = $this->getPostUserID($pID);
+					Loader::packageElement('sb_comments','sharingbox', array('comments'=>$comments,'postUserID'=>$postUserID,'pID'=>$pID));
 				exit;
 			} 
-	
- 
 	}
-
-	
 	
 }
-
-?>

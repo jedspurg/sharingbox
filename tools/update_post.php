@@ -5,19 +5,17 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	$pID = $_GET['pID'];
 	$statext = $_GET['statext'];
 	$sw = $_GET['sw'];
-	$blockArea = $_GET['blockArea'];
-	$cID = $_GET['cID'];
 	$statlinkcomment = $_GET['statlinkcomment'];
 	
-	$controller = new CwsShareBlockController();
+	$controller = new SharingboxBlockController();
 	switch($pType){
 		
-		case 'CWS-Status':
-		$controller->update_status_share($pID, $statext, $sw, $blockArea, $cID);
+		case 'sb_status':
+		$controller->update_status_share($pID, $statext, $sw);
 		break;
 		
-		case 'CWS-Link':
-		$controller->update_link_share($pID, $statext, $statlinkcomment, $sw, $blockArea, $cID);
+		case 'sb_link':
+		$controller->update_link_share($pID, $statext, $statlinkcomment, $sw);
 		break;
 		
 	}

@@ -15,15 +15,6 @@ $valt = Loader::helper('validation/token');
 
 ?>
 
-<script type="text/javascript" src="<?php  echo ASSETS_URL_JAVASCRIPT?>/swfupload/swfupload.js"></script>
-<script type="text/javascript" src="<?php  echo ASSETS_URL_JAVASCRIPT?>/swfupload/swfupload.handlers.js"></script>
-<script type="text/javascript" src="<?php  echo ASSETS_URL_JAVASCRIPT?>/swfupload/swfupload.fileprogress.js"></script>
-<script type="text/javascript" src="<?php  echo ASSETS_URL_JAVASCRIPT?>/swfupload/swfupload.queue.js"></script>
-
-
-
-
-
 <?php  
 $umf = ini_get('upload_max_filesize');
 $umf = str_ireplace(array('M', 'K', 'G'), array(' MB', 'KB', ' GB'), $umf);
