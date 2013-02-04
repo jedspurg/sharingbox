@@ -2332,17 +2332,15 @@ function postComment(pID){
 }
 
 $(document).ready(function() {	
-	var processing;
+	
 	$(document).scroll(function(e){
-			if (processing)
-					return false;
-			if ($(window).scrollTop() >= ($(document).height() - $(window).height())*0.95){
-					processing = true;
+			if ($(window).scrollTop() + $(window).height() == $(document).height()){
+					$("#more-posts-loader").show();
 					offset += 10;
 					var url = SB_POST_LOADER + '/?offset=' + offset + '&ajax=1';
 					$.get(url, function(r) {
 						$('#more-posts').append(r);
-						processing = false;
+						$("#more-posts-loader").hide();
 					});		
 					return false;
 			}
