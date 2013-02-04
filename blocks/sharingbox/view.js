@@ -2331,18 +2331,22 @@ function postComment(pID){
 	return false;
 }
 
-function loadMorePosts(){	
-	offset += 10;
-	var url = SB_POST_LOADER + '/?offset=' + offset + '&ajax=1';
-	$.get(url, function(r) {
-		$('#more-posts').append(r);
-	});	
-			
-	return false;
-}
-
-	  
-$(document).ready(function() {
+$(document).ready(function() {	
+	var processing;
+	$(document).scroll(function(e){
+			if (processing)
+					return false;
+			if ($(window).scrollTop() >= ($(document).height() - $(window).height())*0.95){
+					processing = true;
+					offset += 10;
+					var url = SB_POST_LOADER + '/?offset=' + offset + '&ajax=1';
+					$.get(url, function(r) {
+						$('#more-posts').append(r);
+						processing = false;
+					});		
+					return false;
+			}
+	});
 
 	$("#status-post").on('click', function() {
 	  $(".loading").show();

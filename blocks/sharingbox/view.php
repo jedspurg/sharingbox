@@ -71,10 +71,12 @@ if (is_object($gallerybox)) {
 ?>            
 </div>
 <?php }?>
-
+<div id="commentable_lerteco_wall" class="wall-share-wrap">
 <?php Loader::packageElement('sb_postings','sharingbox', array('postings'=>$postings));?>
 <div id="more-posts"></div>
-<button onClick="loadMorePosts()" class="btn btn-primary">Load More Posts</button>
+<div class="loading show"></div>
+</div>
+
 
 
 
