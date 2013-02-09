@@ -12,7 +12,7 @@ class SharingboxPost extends Model{
 	
 	public function getPosts($offset, $uID){
 		$sql = "SELECT * FROM SharingboxPosts";
-		if($uID){$sql .= " WHERE uID = '$uID'";}
+		if($uID != 0){$sql .= " WHERE uID = '$uID'";}
 		$sql .= " ORDER BY entryDate DESC";
 		$sql .= " LIMIT $offset, 10";
 		$results = $this->db->query($sql);

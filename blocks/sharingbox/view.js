@@ -2067,7 +2067,7 @@ cwsuploadComplete = function() {
 	var url = SB_UPLOAD_COMPLETE + '?ajax=1';
 	$(function() {
 		$.get(url, function(r) {
-			$('div#commentable_lerteco_wall').before(r).remove();
+			$('.commentable_sharingbox_wall').before(r).remove();
 			
 		});
 		return false;
@@ -2169,7 +2169,7 @@ function readyCommentStream(){
 		
 		var pID = $(this).attr("id").match(/[\d]+$/);
 
-		var url = SB_POST_DELETE + '/?pID=' + pID + '&ajax=1';
+		var url = SB_POST_DELETE + '/?pID=' + pID + '&sbUID=' + sbUID + '&ajax=1';
 		$.get(url, function(r) {
 			$('.modal-backdrop').hide();
 			$('.modal').hide();
@@ -2187,7 +2187,7 @@ function readyCommentStream(){
 		var comtext = $("input#comment-edit_" + commID).val();
 		var pID = $("input#commpID_" + commID).val();
 		
-		var url = SB_UPDATE_COMMENT + '/?pID=' + pID + '&commID=' + commID + '&comtext=' + comtext + '&ajax=1';
+		var url = SB_UPDATE_COMMENT + '/?pID=' + pID + '&commID=' + commID + '&comtext=' + comtext + '&sbUID=' + sbUID + '&ajax=1';
 		$.get(url, function(r) {
 			$('div.cws-comments_' + pID).before(r).remove();
 			$('div.cws-comments_' + pID).effect("highlight", {}, 800);
@@ -2257,7 +2257,7 @@ function readyCommentStream(){
 		
 		var commID = $(this).attr("id").match(/[\d]+$/);
 
-		var url = SB_COMMENT_DELETE + '/?commID=' + commID + '&ajax=1';
+		var url = SB_COMMENT_DELETE + '/?commID=' + commID + '&sbUID=' + sbUID + '&ajax=1';
 		$.get(url, function(r) {
 			$('.modal-backdrop').hide();
 			$('.modal').hide();
@@ -2269,27 +2269,19 @@ function readyCommentStream(){
 	$('.cws-post-update-btn').click(function() {
 		
 		var pID = $(this).attr("id").match(/[\d]+$/);
-		
-		
 		var pType = $("input#pType_" + pID).val();
 	  var sw = $("input#sw-edit_" + pID).val();
-		
+		var offset = 10;
 		if(pType == 'CWS-Link'){
-			
 			var  statext = $("input#statlink-edit_" + pID).val();
 			var statlinkcomment = $("input#statext-edit_" + pID).val();
-			
 		}else{
-			
 			var  statext = $("input#statext-edit_" + pID).val();
-			
 		}
-	  	
-
-		var url = SB_POST_UPDATE + '?pID=' + pID + '&pType=' + pType +'&statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&ajax=1';
+		var url = SB_POST_UPDATE + '?pID=' + pID + '&pType=' + pType +'&statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&sbUID=' + sbUID + '&ajax=1';
 		
 		 $.get(url, function(r) {
-			  $('div#commentable_lerteco_wall').before(r).remove();
+			  $('.commentable_sharingbox_wall').before(r).remove();
 		  });
 		return false;	
 	});
@@ -2298,8 +2290,6 @@ function readyCommentStream(){
 		$(this).val( '' );
 		$(this).css( 'color', '#000000' );
 	  });
-	  
-	
 	 	
 	$('.cws-comment-bar').click(function() {
 		var pID = $(this).attr("id").match(/[\d]+$/);
@@ -2319,10 +2309,9 @@ function readyCommentStream(){
 	});
 }
 
-
 function postComment(pID){
 	var comtext = $("input#cwsComment_" + pID).val();
-	var url = SB_COMMENT_HELPER + '/?pID=' + pID + '&comtext=' + comtext + '&ajax=1';
+	var url = SB_COMMENT_HELPER + '/?pID=' + pID + '&comtext=' + comtext + '&sbUID=' + sbUID + '&ajax=1';
 
 	$.get(url, function(r) {
 		$('div.cws-comments_' + pID).before(r).remove();
@@ -2332,31 +2321,31 @@ function postComment(pID){
 }
 
 $(document).ready(function() {	
-	
 	$(document).scroll(function(e){
-			if ($(window).scrollTop() + $(window).height() == $(document).height()){
-					$("#more-posts-loader").show();
-					offset += 10;
-					var url = SB_POST_LOADER + '/?offset=' + offset + '&ajax=1';
-					$.get(url, function(r) {
-						$('#more-posts').append(r);
-						$("#more-posts-loader").hide();
-					});		
-					return false;
-			}
+		if ($(window).scrollTop() + $(window).height() == $(document).height()){
+			$("#more-posts-loader").show();
+			offset += 10;
+			var url = SB_POST_LOADER + '/?offset=' + offset + '&sbUID=' + sbUID + '&ajax=1';
+			$.get(url, function(r) {
+				$('#more-posts').append(r);
+				$("#more-posts-loader").hide();
+			});		
+			return false;
+		}
 	});
 
-	$("#status-post").on('click', function() {
+	$("#cws-status-form").on('submit', function() {
 	  $(".loading").show();
 	  $("#statlinkcomment-wrap").hide();
 	  var action = $("input#action").val();
 	  var statlinkcomment = $("input#statlinkcomment").val();
 	  var sw = $("input#sw").val();
 	  var statext = $("input#statext").val();
-	  var url = SB_TOOLS_DIR + action + '?statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&ajax=1';
+	  var url = SB_TOOLS_DIR + action + '?statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&sbUID=' + sbUID + '&ajax=1';
 		$.get(url, function(r) {
-			$('div#commentable_lerteco_wall').before(r).remove();
+			$('#sb-wall').before(r).remove();
 		});
+		$("input#statext").blur();
 		$("input#statext").val('What\'s on your mind?');
 		$("input#statext").css('color', '#999999');
 	  return false;

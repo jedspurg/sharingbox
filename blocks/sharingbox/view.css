@@ -2357,10 +2357,10 @@ display: none;
 
 	
 }
-.lerteco-wall-item{
+.sharingbox-wall-item{
 	margin:20px 0;
 }
-#cws-share-wrapper, #commentable_lerteco_wall{
+#cws-share-wrapper, .commentable_sharingbox_wall{
 	width:550px !important;
 }
 .wall-share-wrap ul.cws-wall-user{

@@ -3,16 +3,11 @@ defined('C5_EXECUTE') or die(_("Access Denied."));
 Loader::model('sb_post','sharingbox');
 class SharingboxBlockController extends BlockController {
 	
-
-	
 	protected $btTable = 'btSharingbox';
 	protected $btInterfaceWidth = "550";
 	protected $btInterfaceHeight = "200";
 	protected $sbModel;
 	
-	/** 
-	 * Used for localization. If we want to localize the name/description we have to include this
-	 */
 	public function getBlockTypeDescription() {
 		return t("Share Status and Links socially.");
 	}
@@ -26,28 +21,48 @@ class SharingboxBlockController extends BlockController {
 		$this->db = Loader::db();
 		$this->sbModel = new SharingboxPost();
 		$u = new User();
-
 	}	
 	
-	public function view() { 
-	
+	private function loadBlockInformation() {
+		$this->set('uID', $this->uID);
+		$this->set('type', $this->type);	
+		$this->set('visibility', $this->visibility);	
+		$this->set('bID', $this->bID);				
+	}
+		
+	private function getPosts($offset = 0, $sbUID = 0){
+		return $this->sbModel->getPosts($offset,$sbUID);
 	}
 	
-	private function getPosts($offset = 0, $uID = null){
-		return $this->sbModel->getPosts($offset,$uID);
-	}
-	
-	public function loadMorePosts($offset){
+	public function loadMorePosts($offset, $sbUID){
 		if ($_REQUEST['ajax'] == true) {
-				print Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts($offset)));	
+				print Loader::packageElement('sb_postings_more','sharingbox', array('postings'=>$this->getPosts($offset, $sbUID)));	
 				exit;
 			}
 	}
 
-	function on_page_view() {
+	public function on_page_view() {
 		$html = Loader::helper('html');
 		$b = Block::getByName('sharingbox');
-		$this->set('postings', $this->getPosts());
+		$this->loadBlockInformation(); 
+		switch ($this->type){
+			case '1':
+				$view = View::getInstance(); 
+				if ( is_object($view) && is_object($view->controller) && is_object($view->controller->getvar('profile')) ){ 
+					$userInfo = $view->controller->getvar('profile'); 
+					$sbUID = $userInfo->getUserID();
+				}else{ 
+					$sbUID=0;
+				}
+			break;
+			case '2':
+				$sbUID = $this->uID;
+			break;
+			case '3':
+				$sbUID=0;
+			break;
+		}
+		$this->set('postings', $this->getPosts(0,$sbUID));
 		
 		$this->addFooterItem('
 		<script type="text/javascript">
@@ -58,6 +73,8 @@ class SharingboxBlockController extends BlockController {
 		var SB_POST_DELETE = "'.Loader::helper('concrete/urls')->getToolsURL('delete_post', 'sharingbox').'";
 		var SB_COMMENT_DELETE = "'.Loader::helper('concrete/urls')->getToolsURL('delete_comment', 'sharingbox').'";
 		var SB_POST_LOADER = "'.Loader::helper('concrete/urls')->getToolsURL('post_loader', 'sharingbox').'";
+		var offset = 0;
+		var sbUID = '.$sbUID.';
 		</script>');
 		
 		$gallerybox = Loader::package('gallerybox'); 
@@ -79,7 +96,6 @@ class SharingboxBlockController extends BlockController {
 			var GBX_SET_TOOL = "'.Loader::helper('concrete/urls')->getToolsURL('user_add_to', 'gallerybox').'";
 			var GBX_COMPLETED_TOOL = "'.Loader::helper('concrete/urls')->getToolsURL('add_to_complete', 'gallerybox').'";
 			var GBX_SET_RELOAD = "'.Loader::helper('concrete/urls')->getToolsURL('search_user_sets_reload', 'gallerybox').'";
-			var offset = 0;
 			</script>');
 	
 			$c = Page::getCurrentPage();
@@ -102,7 +118,7 @@ class SharingboxBlockController extends BlockController {
 
 	}
 	
-	public function status_share($statext, $sw){
+	public function status_share($statext, $sw, $sbUID){
 		$u = new User();
 		if($u->isRegistered()){	
 			$statext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($statext) );
@@ -110,43 +126,47 @@ class SharingboxBlockController extends BlockController {
 			$wall_status = $this->prep_status_share($statext);
 			$this->sbModel->savePost($u->getUserID(), $wall_status, $sw, $handle);
 				if ($_REQUEST['ajax'] == true) {
-					Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts()));	
+					Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts(0, $sbUID)));	
 					exit;
 				} 
 			}
 	}
 	
-	public function link_share($statext, $statlinkcomment, $sw){
+	public function link_share($statext, $statlinkcomment, $sw, $sbUID){
 		$u=new User();
 		if($u->isRegistered()){	
 			$handle = 'sb_link';
 			$wall_link = $this->prep_link_share($statext, $statlinkcomment);
 			$this->sbModel->savePost($u->getUserID(), $wall_link, $sw, $handle);
 			if ($_REQUEST['ajax'] == true) {
-				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts()));	
+				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts(0, $sbUID)));	
 				exit;
 			}
 		}
 	}
 	
-	public function update_link_share($pID, $statext, $statlinkcomment, $sw){
+	public function update_link_share($pID, $statext, $statlinkcomment, $sw, $sbUID){
 		$wall_link = $this->prep_link_share($statext, $statlinkcomment);	
 		$this->sbModel->updatePost($pID, $wall_link, $sw);
 		if ($_REQUEST['ajax'] == true) {
-				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts()));	
+				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts(0, $sbUID)));	
 				exit;
 			}
 	}
 	
-	public function update_status_share($pID, $statext, $sw){
+	public function update_status_share($pID, $statext, $sw, $sbUID){
 		$statext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($statext) );
 		$wall_status = $this->prep_status_share($statext);
 		$this->sbModel->updatePost($pID, $wall_status, $sw);
 		if ($_REQUEST['ajax'] == true) {
-				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts()));	
+				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts(0, $sbUID)));	
 				exit;
 			}
 
+	}
+	
+	public function delete_post($pID){
+		$this->sbModel->deletePost($pID);
 	}
 	
 	private function prep_status_share($statext){
@@ -170,10 +190,6 @@ class SharingboxBlockController extends BlockController {
 		
 		return $wall_link;
 		
-	}
-	
-	public function delete_post($pID){
-		$this->sbModel->deletePost($pID);
 	}
 	
 	public function photo_share($uID,$numFiles,$sw){
@@ -280,7 +296,6 @@ class SharingboxBlockController extends BlockController {
 	}
 	
 	private function getUrlContents($url){
-		
 		$result = false;
 		$options = array(
         CURLOPT_RETURNTRANSFER => true,     // return web page
@@ -351,6 +366,10 @@ class SharingboxBlockController extends BlockController {
 					Loader::packageElement('sb_comments','sharingbox', array('comments'=>$comments,'postUserID'=>$postUserID,'pID'=>$pID));
 				exit;
 			} 
+	}
+	
+	public function delete(){	
+		parent::delete();
 	}
 	
 }

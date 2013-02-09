@@ -7,4 +7,3 @@ if($_GET['pID']) {
 	$controller = new SharingboxBlockController();
 	$controller->add_comment($pID, strip_tags($comtext));
 }
-?>

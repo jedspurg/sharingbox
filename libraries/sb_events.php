@@ -1,4 +1,5 @@
 <?php
+defined('C5_EXECUTE') or die("Access Denied.");
 Loader::model('sb_post','sharingbox');
 class SbEvents{
 	

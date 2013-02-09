@@ -1,6 +1,4 @@
-<?php 
-defined('C5_EXECUTE') or die(_("Access Denied."));
+<?php   
+defined('C5_EXECUTE') or die("Access Denied.");
 
-?>
-
-<h4><?php  echo t('This block has no options to edit.') ?></h4>
+$this->inc('form_setup_html.php'); 

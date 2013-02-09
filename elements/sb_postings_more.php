@@ -6,13 +6,7 @@ $date = Loader::helper('date');
 Loader::model('users_friends');
 $uh = Loader::helper('concrete/urls');
 $controller = new SharingboxBlockController();
-?>
-<div id="sb-wall" class="commentable_sharingbox_wall wall-share-wrap">
-  <div class="commentable_sharingbox_wall wall-share-wrap">
-    <div class="loading"></div>
-      <ul class="sharingbox_wall">
 
-<?php  
 if(is_array($postings)):
 	foreach ($postings as $post):
 		$poster = UserInfo::getByID($post->uID);
@@ -146,9 +140,7 @@ if(is_array($postings)):
 	endforeach; 
 endif;
 ?>
-  	</ul>
-  </div>
-</div>
+  
 <script type="text/javascript">
 readyCommentStream();	
 </script>

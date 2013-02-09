@@ -1,7 +1,7 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
-if($u->isRegistered()){?>
+if($u->isRegistered() && $visibility > 0){?>
 <div id="cws-share-wrapper" class="wall-share-wrap">
     <div class="well">
         <div id="share-bar">
@@ -71,11 +71,15 @@ if (is_object($gallerybox)) {
 ?>            
 </div>
 <?php }?>
-<div id="commentable_lerteco_wall" class="wall-share-wrap">
+
 <?php Loader::packageElement('sb_postings','sharingbox', array('postings'=>$postings));?>
-<div id="more-posts"></div>
-<div id="more-posts-loader" class="loading"></div>
+
+<div class="wall-share-wrap">
+  <div id="more-posts"></div>
+  <div id="more-posts-loader" class="loading"></div>
 </div>
+  
+
 
 
 

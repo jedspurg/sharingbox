@@ -1,4 +1,5 @@
-<?php  
+<?php 
+defined('C5_EXECUTE') or die("Access Denied."); 
 $u = new User();
 $cui = UserInfo::getByID($u->getUserID());
 $av = Loader::helper('concrete/avatar');
