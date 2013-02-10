@@ -12,7 +12,7 @@ class SharingboxPost extends Model{
 	
 	public function getPosts($offset, $uID){
 		$sql = "SELECT * FROM SharingboxPosts";
-		if($uID != 0){$sql .= " WHERE uID = '$uID'";}
+		if($uID != 0){$sql .= " WHERE uID = $uID";}
 		$sql .= " ORDER BY entryDate DESC";
 		$sql .= " LIMIT $offset, 10";
 		$results = $this->db->query($sql);
@@ -37,7 +37,8 @@ class SharingboxPost extends Model{
 	}
 	
 	public function getPosterUserID($pID){
-		$ic = $this->db->query("SELECT uID FROM SharingboxPosts where pID = '$pID'");
+		$sql="SELECT uID FROM SharingboxPosts where pID = ?";
+		$ic = $this->db->query($sql, array($pID));
 		$row = $ic->fetchrow();
 		$uID = $row['uID'];
 		return $uID;
@@ -50,10 +51,10 @@ class SharingboxPost extends Model{
 	}
 	
 	public function deletePost($pID){
-		$sql="DELETE FROM SharingboxPosts WHERE pID = '$pID'"; 
-		$this->db->execute($sql);
-		$sql="DELETE FROM SharingboxComments WHERE pID = '$pID'"; 
-		$this->db->execute($sql);
+		$sql="DELETE FROM SharingboxPosts WHERE pID = ?"; 
+		$this->db->execute($sql, array($pID));
+		$sql="DELETE FROM SharingboxComments WHERE pID = ?'"; 
+		$this->db->execute($sql, array($pID));
 	}
 	
 	public function updatePost($pID, $post, $sw){
@@ -63,33 +64,35 @@ class SharingboxPost extends Model{
 	}
 	
 	public function getPostTemplateID($ptHandle){
-		$sql = "SELECT templateID FROM SharingboxPostTemplates WHERE handle = '$ptHandle'";
-		$row = $this->db->getrow($sql);
+		$sql = "SELECT templateID FROM SharingboxPostTemplates WHERE handle = ?";
+		$row = $this->db->getrow($sql, array($ptHandle));
 		$result = $row['templateID'];
 		return $result;
 	}
 	
 	public function getComments($pID){
-		$ic = $this->db->query("SELECT * FROM SharingboxComments where pID = '$pID'");
+		$sql="SELECT * FROM SharingboxComments where pID = ?";
+		$ic = $this->db->query($sql, array($pID));
 		while($row=$ic->fetchrow()){
 			$comments[] = $row;
 		}		
 		return $comments;
 	}
 	
+
 	public function saveComment($data){
-		$q = ("INSERT INTO SharingboxComments (pID, uID, commentText) VALUES (?,?,?)");
-		$this->db->EXECUTE($q,$data);
+		$sql = ("INSERT INTO SharingboxComments (pID, uID, commentText) VALUES (?,?,?)");
+		$this->db->EXECUTE($sql,$data);
 	}
 	
 	public function updateComment($pID, $commID, $commText){
-		$sql="UPDATE SharingboxComments SET commentText = '$commText' WHERE commentID = '$commID'"; 
-		$this->db->execute($sql);
+		$sql="UPDATE SharingboxComments SET commentText = ? WHERE commentID = ?"; 
+		$this->db->execute($sql, array($commText,$commID));
 	}
 	
 	public function deleteComment($commID){
-		$sql="DELETE FROM SharingboxComments WHERE commentID = '$commID'"; 
-		$this->db->execute($sql);
+		$sql="DELETE FROM SharingboxComments WHERE commentID = ?"; 
+		$this->db->execute($sql, array($commID));
 	}
 	
 	

@@ -5,7 +5,7 @@ class SharingboxPackage extends Package {
 
 	protected $pkgHandle = 'sharingbox';
 	protected $appVersionRequired = '5.6';
-	protected $pkgVersion = '1.0';
+	protected $pkgVersion = '0.9';
 	
 	public function getPackageDescription() {
 		return t('Share statuses and links socially.');
@@ -24,15 +24,6 @@ class SharingboxPackage extends Package {
 	public function install() {
 		$pkg = parent::install();
 		BlockType::installBlockTypeFromPackage('sharingbox', $pkg);
-	}
-	
-	public function uninstall() {
-		parent::uninstall();
-    }	
-	
-	public function upgrade() {
-		parent::upgrade();
-
 	}
 	
 }
