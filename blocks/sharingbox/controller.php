@@ -262,15 +262,15 @@ class SharingboxBlockController extends BlockController {
 	private function getUrlData($url){
 		$result = false;
 		$extpage = $this->getUrlContents($url);
-		if (isset($extpage['content']) && is_string($extpage['content'])){
+		if (isset($extpage) && is_string($extpage)){
 			$title = null;
 			$metaTags = null;
 			
-			preg_match('/<title>([^>]*)<\/title>/si', $extpage['content'], $match );
+			preg_match('/<title>([^>]*)<\/title>/si', $extpage, $match );
 			if (isset($match) && is_array($match) && count($match) > 0){
 				$title = strip_tags($match[1]);
 			}
-			preg_match_all('/<[\s]*meta[\s]*name="?' . '([^>"]*)"?[\s]*' . 'content="?([^>"]*)"?[\s]*[\/]?[\s]*>/si', $extpage['content'], $match);
+			preg_match_all('/<[\s]*meta[\s]*name="?' . '([^>"]*)"?[\s]*' . 'content="?([^>"]*)"?[\s]*[\/]?[\s]*>/si', $extpage, $match);
 		   
 			if (isset($match) && is_array($match) && count($match) == 3){
 				$originals = $match[0];
@@ -295,31 +295,9 @@ class SharingboxBlockController extends BlockController {
 	}
 	
 	private function getUrlContents($url){
-		$result = false;
-		$options = array(
-        CURLOPT_RETURNTRANSFER => true,     // return web page
-        CURLOPT_HEADER         => false,    // don't return headers
-        CURLOPT_FOLLOWLOCATION => true,     // follow redirects
-        CURLOPT_ENCODING       => "",       // handle all encodings
-        CURLOPT_USERAGENT      => "spider", // who am i
-        CURLOPT_AUTOREFERER    => true,     // set referer on redirect
-        CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
-        CURLOPT_TIMEOUT        => 120,      // timeout on response
-        CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
-    	);
-			
-		$ch = curl_init($url);
-		curl_setopt_array($ch, $options);
-		$content = curl_exec($ch);
-		$err  = curl_errno($ch);
-		$errmsg = curl_error($ch);
-		$header = curl_getinfo($ch);
-		curl_close( $ch );
-	
-		$header['errno']   = $err;
-		$header['errmsg']  = $errmsg;
-		$header['content'] = $content;
-		return $header;
+		$fh = Loader::helper('file');
+		$content = $fh->getContents($url);
+		return $content;
 	}
 	
 	public function getPostUserID($pID){

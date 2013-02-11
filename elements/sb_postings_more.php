@@ -44,7 +44,7 @@ if(is_array($postings)):
                   ?>
                   <ul class="cws-wall-user">
                     <li><a href="<?php   echo $profile_url ?>"><strong><?php   echo $username ?></strong></a></li>
-                    <li><span class="time"><?php   echo $date->timeSince(strtotime($post->created)) ?> ago<?php  if($u->isRegistered()){?> - <a id="formshow_<?php  echo $posting->pID?>" class="cws-comment-bar" href="javascript:void(0);"><?php  echo t('comment')?></a><?php }?></span> </li>
+                    <li><span class="time"><?php   echo $date->timeSince(strtotime($post->created)) ?> ago<?php  if($u->isRegistered()){?> - <a id="formshow_<?php  echo  $post->pID?>" class="cws-comment-bar" href="javascript:void(0);"><?php  echo t('comment')?></a><?php }?></span> </li>
                     <li><?php if ($sw == '2'){?><i class="icon-globe shared-everyone" title="<?php echo t('shared with everyone')?>"></i><?php }else{?><i class="icon-user shared-friends" title="<?php echo t('shared with friends')?>"></i><?php }?></li>
                     
                     <?php if($u->getUserID() == $poster->getUserID() or $u->isSuperUser()):?>
