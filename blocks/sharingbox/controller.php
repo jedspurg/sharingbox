@@ -15,6 +15,10 @@ class SharingboxBlockController extends BlockController {
 		return t("SharingBox");
 	}
 	
+	public function add() {
+    	$this->set('visibility', 1);
+	}
+	
 	private function loadBlockInformation() {
 		$this->set('uID', $this->uID);
 		$this->set('type', $this->type);	

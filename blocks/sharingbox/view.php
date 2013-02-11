@@ -72,7 +72,11 @@ if (is_object($gallerybox)) {
 </div>
 <?php }?>
 
-<?php Loader::packageElement('sb_postings','sharingbox', array('postings'=>$postings));?>
+<?php 
+if(is_array($postings)){
+	Loader::packageElement('sb_postings','sharingbox', array('postings'=>$postings));
+}
+?>
 
 <div class="wall-share-wrap">
   <div id="more-posts"></div>

@@ -142,6 +142,7 @@ endif;
 ?>
   
 <script type="text/javascript">
+$("#more-posts-loader").hide();
 readyCommentStream();	
 </script>
 

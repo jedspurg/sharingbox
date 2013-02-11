@@ -2322,7 +2322,7 @@ function postComment(pID){
 
 $(document).ready(function() {	
 	$(document).scroll(function(e){
-		if ($(window).scrollTop() + $(window).height() >= $(document).height()){
+		if ($(window).scrollTop() + $(window).height() == $(document).height()){
 			$("#more-posts-loader").show();
 			offset += 10;
 			var url = SB_POST_LOADER + '/?offset=' + offset + '&sbUID=' + sbUID + '&ajax=1';
