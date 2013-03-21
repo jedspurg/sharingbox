@@ -5,7 +5,6 @@ if($_GET['pID']) {
 	$pID = $_GET['pID'];
 	$commID = $_GET['commID'];
 	$comtext = $_GET['comtext'];	
-	$valt = $_GET['valt'];
 	$controller = new SharingboxBlockController();
-	$controller->updateComment($pID, $commID, strip_tags($comtext), $valt);
+	$controller->updateComment($pID, $commID, strip_tags($comtext));
 }

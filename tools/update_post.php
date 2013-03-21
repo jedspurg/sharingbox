@@ -7,16 +7,15 @@ defined('C5_EXECUTE') or die("Access Denied.");
 	$sw = $_GET['sw'];
 	$statlinkcomment = $_GET['statlinkcomment'];
 	$sbUID = $_GET['sbUID'];
-	$valt = $_GET['valt'];
 	$controller = new SharingboxBlockController();
 	switch($pType){
 		
 		case 'sb_status':
-		$controller->update_status_share($pID, $statext, $sw, $sbUID, $valt);
+		$controller->update_status_share($pID, $statext, $sw, $sbUID);
 		break;
 		
 		case 'sb_link':
-		$controller->update_link_share($pID, $statext, $statlinkcomment, $sw, $sbUID, $valt);
+		$controller->update_link_share($pID, $statext, $statlinkcomment, $sw, $sbUID);
 		break;
 		
 	}

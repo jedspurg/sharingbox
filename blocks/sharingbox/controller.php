@@ -73,7 +73,7 @@ class SharingboxBlockController extends BlockController {
 		var SB_POST_LOADER = "'.Loader::helper('concrete/urls')->getToolsURL('post_loader', 'sharingbox').'";
 		var offset = 0;
 		var sbUID = '.$sbUID.';
-		var valt = '. $token->generate() .';
+		var ccm_token = "'. $token->generate('sharing_box') .'";
 		</script>');
 		
 		$gallerybox = Loader::package('gallerybox'); 
@@ -117,11 +117,12 @@ class SharingboxBlockController extends BlockController {
 
 	}
 	
-	public function status_share($statext, $sw, $sbUID, $valt){
+	public function status_share($statext, $sw, $sbUID){
+		$vf = Loader::helper('validation/form');
+		$vf->addRequiredToken('sharing_box');
 		$u = new User();
 		$sbModel = new SharingboxPost();
-		$vt = Loader::helper('validation/token');
-		if($u->isRegistered() && $vt->validate($valt)){	
+		if($u->isRegistered() && $vf->test()){	
 			$statext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($statext) );
 			$handle = 'sb_status';
 			$wall_status = $this->prep_status_share($statext);
@@ -134,28 +135,29 @@ class SharingboxBlockController extends BlockController {
 	}
 
 	
-	public function link_share($statext, $statlinkcomment, $sw, $sbUID, $valt){
+	public function link_share($statext, $statlinkcomment, $sw, $sbUID){
+		$vf = Loader::helper('validation/form');
+		$vf->addRequiredToken('sharing_box');
 		$u = new User();
 		$sbModel = new SharingboxPost();
-		$vt = Loader::helper('validation/token');
-		if($u->isRegistered()){	
+		if($u->isRegistered() && $vf->test()){	
 			$handle = 'sb_link';
 			$wall_link = $this->prep_link_share($statext, $statlinkcomment);
-			if ($vt->validate($valt)){
-				$sbModel->savePost($u->getUserID(), $wall_link, $sw, $handle);
-				if ($_REQUEST['ajax'] == true) {
-					Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts(0, $sbUID)));	
-					exit;
-				}
+			$sbModel->savePost($u->getUserID(), $wall_link, $sw, $handle);
+			if ($_REQUEST['ajax'] == true) {
+				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts(0, $sbUID)));	
+				exit;
 			}
 		}
 	}
 	
-	public function update_link_share($pID, $statext, $statlinkcomment, $sw, $sbUID, $valt){
-		$vt = Loader::helper('validation/token');
+	public function update_link_share($pID, $statext, $statlinkcomment, $sw, $sbUID){
+		$vf = Loader::helper('validation/form');
+		$vf->addRequiredToken('sharing_box');
+		$u = new User();
 		$sbModel = new SharingboxPost();
 		$wall_link = $this->prep_link_share($statext, $statlinkcomment);
-		if ($vt->validate($valt)){	
+		if($u->isRegistered() && $vf->test()){	
 			$sbModel->updatePost($pID, $wall_link, $sw);
 			if ($_REQUEST['ajax'] == true) {
 				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts(0, $sbUID)));	
@@ -164,12 +166,14 @@ class SharingboxBlockController extends BlockController {
 		}
 	}
 	
-	public function update_status_share($pID, $statext, $sw, $sbUID, $valt){
-		$vt = Loader::helper('validation/token');
+	public function update_status_share($pID, $statext, $sw, $sbUID){
+		$vf = Loader::helper('validation/form');
+		$vf->addRequiredToken('sharing_box');
+		$u = new User();
 		$sbModel = new SharingboxPost();
 		$statext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($statext) );
 		$wall_status = $this->prep_status_share($statext);
-		if ($vt->validate($valt)){	
+		if($u->isRegistered() && $vf->test()){	
 			$sbModel->updatePost($pID, $wall_status, $sw);
 			if ($_REQUEST['ajax'] == true) {
 				Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts(0, $sbUID)));	
@@ -178,9 +182,11 @@ class SharingboxBlockController extends BlockController {
 		}
 	}
 	
-	public function delete_post($pID, $valt){
-		$vt = Loader::helper('validation/token');
-		if ($vt->validate($valt)){
+	public function delete_post($pID){
+		$vf = Loader::helper('validation/form');
+		$vf->addRequiredToken('sharing_box');
+		$u = new User();
+		if($u->isRegistered() && $vf->test()){
 			$sbModel = new SharingboxPost();
 			$sbModel->deletePost($pID);
 		}
@@ -329,10 +335,11 @@ class SharingboxBlockController extends BlockController {
 		return $sbModel->getComments($pID);
 	}
 	
-	public function add_comment($pID, $comtext, $valt){
+	public function add_comment($pID, $comtext){
 		$u = new User();
-		$vt = Loader::helper('validation/token');
-		if($u->isRegistered() && $vt->validate($valt)){	
+		$vf = Loader::helper('validation/form');
+		$vf->addRequiredToken('sharing_box');
+		if($u->isRegistered() && $vf->test()){
 			$comtext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($comtext) );
 			$data = array('pID' => $pID, 'comUID' => $u->getUserID(), 'cwsComment' => $comtext);
 			$this->saveComment($data);
@@ -345,28 +352,29 @@ class SharingboxBlockController extends BlockController {
 		}
 	}
 	
-	private function saveComment($data, $valt) {
-		$u = new User();
-		$vt = Loader::helper('validation/token');
+	private function saveComment($data) {
+		$vf->addRequiredToken('sharing_box');
 		$sbModel = new SharingboxPost();
-		if($u->isRegistered() && $vt->validate($valt)){
-			$sbModel->saveComment($data);
-		}
+		$sbModel->saveComment($data);
 	}
 	
-	public function deleteComment($commID, $valt){
-		$vt = Loader::helper('validation/token');
-		if ($vt->validate($valt)){
+	public function deleteComment($commID){
+		$u = new User();
+		$vf = Loader::helper('validation/form');
+		$vf->addRequiredToken('sharing_box');
+		if($u->isRegistered() && $vf->test()){
 			$sbModel = new SharingboxPost();	
 			$sbModel->deleteComment($commID);
 		}
 	}
 	
-	public function updateComment($pID, $commID, $commText, $valt){
-		$vt = Loader::helper('validation/token');
+	public function updateComment($pID, $commID, $commText){
+		$u = new User();
+		$vf = Loader::helper('validation/form');
+		$vf->addRequiredToken('sharing_box');
 		$sbModel = new SharingboxPost();
 		$commText = addslashes($commText);
-		if ($vt->validate($valt)){
+		if($u->isRegistered() && $vf->test()){
 			$sbModel->updateComment($pID, $commID, $commText);
 			if ($_REQUEST['ajax'] == true) {
 					$comments = $this->getComments($pID);
