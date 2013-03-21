@@ -4,6 +4,7 @@ $u = new User();
 $cui = UserInfo::getByID($u->getUserID());
 $av = Loader::helper('concrete/avatar');
 $date = Loader::helper('date');
+$token = Loader::helper('validation/token');
 ?>
 <div class="clear"></div>
   <div class="cws-comments_<?php  echo $pID?> cws-comments">
