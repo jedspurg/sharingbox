@@ -2034,7 +2034,6 @@
       $this.typeahead($this.data())
     })
   })
-
 }(window.jQuery);
 
 cws_filesUploadedDialog = function(searchInstance) { 
@@ -2058,10 +2057,8 @@ cws_filesUploadedDialog = function(searchInstance) {
 }
 
 cwsCloseModal = function(){
-	$("#cwsPhotoUploadModal").hide();
-	
+	$("#cwsPhotoUploadModal").hide();	
 }
-
 
 cwsuploadComplete = function() {
 	var url = SB_UPLOAD_COMPLETE + '?ajax=1';
@@ -2075,9 +2072,7 @@ cwsuploadComplete = function() {
 }
 
 function readyCommentStream(){
-	
-	
-	
+
 	//initialize element states
 	$("#cws-status a").css('cursor', 'pointer');
 	$("#cws-link a").css('cursor', 'pointer');
@@ -2088,9 +2083,7 @@ function readyCommentStream(){
 	$("#cws-friends, #cws-friends-edit").hide();
 	$("#cws-upload").hide();
 	$("#statlinkcomment-wrap").hide();
-	
 	$("#sw").val( '2' );
-	
 	
 	$("#statext, #statlinkcomment").focus(function () {
 		if($(this).val() == 'Comment on this...' || $(this).val() =='What\'s on your mind?'){
@@ -2100,20 +2093,15 @@ function readyCommentStream(){
 	});
 			
 	$("#cws-status a").click(function () {
-	
 		$("#statext").val('What\'s on your mind?');
 		$("#statext").css('color', '#999999');
 		$("#action").val('status_share');
 		$("#form-button").show();
 		$("#statext").show();
-
-		$("#statlinkcomment-wrap").hide();
-		
+		$("#statlinkcomment-wrap").hide();	
 	});
 	
 	$("#cws-link a").click(function () {
-		
-
 		$("#statext").val('http://');
 		$("#statext, #statlinkcomment").css('color', '#999999');
 		$("#action").val('link_share');
@@ -2121,9 +2109,6 @@ function readyCommentStream(){
 		$("#statext").show();
 		$("#statlinkcomment").val('Comment on this...');
 		$("#statlinkcomment-wrap").show();
-		
-		
-
 	});
 	
 	$("#cws-photo a").click(function () {
@@ -2131,7 +2116,6 @@ function readyCommentStream(){
 		$("#statext").css('color', '#999999');
 		$("#statlinkcomment-wrap").hide();
 		uploadPhoto();
-		
 	});
 	
 	$("#cws-upload").click(function () {
@@ -2150,7 +2134,6 @@ function readyCommentStream(){
 		$("#cws-everyone").show();
 	});
 	
-	
 	$(".cws-everyone-edit").click(function () {
 		var pID = $(this).attr("id").match(/[\d]+$/);
 		$(this).hide();
@@ -2166,9 +2149,8 @@ function readyCommentStream(){
 	});
 	
 	$('.delete-post-btn').click(function() {
-		
+		$(".tooltip").hide();
 		var pID = $(this).attr("id").match(/[\d]+$/);
-
 		var url = SB_POST_DELETE + '/?pID=' + pID + '&sbUID=' + sbUID + '&ccm_token=' + ccm_token + '&ajax=1';
 		$.get(url, function(r) {
 			$('.modal-backdrop').hide();
@@ -2178,15 +2160,11 @@ function readyCommentStream(){
 		return false;	
 	});
 	
-	
-	
 	$('.cws-comment-update-btn').click(function() {
-		
+    $(".tooltip").hide();
 		var commID = $(this).attr("id").match(/[\d]+$/);
-		
 		var comtext = $("input#comment-edit_" + commID).val();
 		var pID = $("input#commpID_" + commID).val();
-		
 		var url = SB_UPDATE_COMMENT + '/?pID=' + pID + '&commID=' + commID + '&comtext=' + comtext + '&sbUID=' + sbUID + '&ccm_token=' + ccm_token + '&ajax=1';
 		$.get(url, function(r) {
 			$('div.cws-comments_' + pID).before(r).remove();
@@ -2196,20 +2174,17 @@ function readyCommentStream(){
 	});
 	
 	$(".commButtonToggle").click(function() {
-		
 		var commID = $(this).data('commid');
 		$(".delete-comment-btn").attr("id", "commentDelete_" + commID);
-	
 	});
 	
 	$('.cws-edit-post').click(function() {
-		
+    $(".tooltip").hide();
 		var pID = $(this).attr("id").match(/[\d]+$/);
 		var statusText = $(".cws-status-post", "#posting_" + pID).text();
 		var commentText = $(".cws-wall-link-comment", "#posting_" + pID).text();
 		var statLinkParent = $(".cws-wall-link", "#posting_" + pID);
 		var statLink = $("a", statLinkParent).attr("href");
-		
 		if (statLink == null){
 			$("#statext-edit_" + pID).val(statusText);
 		}else{
@@ -2221,42 +2196,36 @@ function readyCommentStream(){
 		
 		$("#posting_" + pID).hide();
 		$("#editPosting_" + pID).show();
-		
-		
 	});
 	
 	$('.cws-edit-comment').click(function() {
+    $(".tooltip").hide();
 		var commID = $(this).attr("id").match(/[\d]+$/);
 		var pID = $("input#commpID_" + commID).val();
 		$(".cws-wall-post-comment").show();
 		$(".editComment").hide();
-		
 		$("#cws-comment-form_" + pID).hide();
 		$("#cws-wall-post-comment_" + commID).hide();
 		$("#editComment_" + commID).show();
-		
-		
 	});
 	
 	$('.comment-cancel').click(function() {
+    $(".tooltip").hide();
 		$(".cws-wall-post-comment").show();
 		$(".editComment").hide();
 		$(".cws-comment-form").show();
-	
 	});
 	
 	$('.post-cancel').click(function() {
-		
+		$(".tooltip").hide();
 		$(".cws-posting").show();
 		$(".editPosting").hide();
-	
 	});
 	
 	
 	$('.delete-comment-btn').click(function() {
-		
+    $(".tooltip").hide();
 		var commID = $(this).attr("id").match(/[\d]+$/);
-
 		var url = SB_COMMENT_DELETE + '/?commID=' + commID + '&sbUID=' + sbUID + '&ccm_token=' + ccm_token + '&ajax=1';
 		$.get(url, function(r) {
 			$('.modal-backdrop').hide();
@@ -2267,7 +2236,7 @@ function readyCommentStream(){
 	});
 	
 	$('.cws-post-update-btn').click(function() {
-		
+		$(".tooltip").hide();
 		var pID = $(this).attr("id").match(/[\d]+$/);
 		var pType = $("input#pType_" + pID).val();
 	  var sw = $("input#sw-edit_" + pID).val();
@@ -2279,7 +2248,6 @@ function readyCommentStream(){
 			var  statext = $("input#statext-edit_" + pID).val();
 		}
 		var url = SB_POST_UPDATE + '?pID=' + pID + '&pType=' + pType +'&statext=' + statext + '&statlinkcomment=' + statlinkcomment + '&sw=' + sw + '&sbUID=' + sbUID + '&ccm_token=' + ccm_token + '&ajax=1';
-		
 		 $.get(url, function(r) {
 			  $('.commentable_sharingbox_wall').before(r).remove();
 		  });
@@ -2312,7 +2280,6 @@ function readyCommentStream(){
 function postComment(pID){
 	var comtext = $("input#cwsComment_" + pID).val();
 	var url = SB_COMMENT_HELPER + '/?pID=' + pID + '&comtext=' + comtext + '&sbUID=' + sbUID + '&ccm_token=' + ccm_token + '&ajax=1';
-
 	$.get(url, function(r) {
 		$('div.cws-comments_' + pID).before(r).remove();
 		$('div.cws-comments_' + pID).effect("highlight", {}, 800);
@@ -2337,6 +2304,7 @@ $(document).ready(function() {
 	$("#cws-status-form").on('submit', function() {
 	  $(".loading").show();
 	  $("#statlinkcomment-wrap").hide();
+    $(".tooltip").hide();
 	  var action = $("input#action").val();
 	  var statlinkcomment = $("input#statlinkcomment").val();
 	  var sw = $("input#sw").val();

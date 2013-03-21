@@ -353,6 +353,7 @@ class SharingboxBlockController extends BlockController {
 	}
 	
 	private function saveComment($data) {
+		$vf = Loader::helper('validation/form');
 		$vf->addRequiredToken('sharing_box');
 		$sbModel = new SharingboxPost();
 		$sbModel->saveComment($data);
