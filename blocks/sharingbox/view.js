@@ -2115,6 +2115,7 @@ function readyCommentStream(){
 		$("#statext").val('What\'s on your mind?');
 		$("#statext").css('color', '#999999');
 		$("#statlinkcomment-wrap").hide();
+		$('#cwsPhotoUploadModal').modal();
 	});
 	
 	$("#cws-everyone").click(function () {

@@ -2376,7 +2376,7 @@ display: none;
 	
 }
 .wall-user-img{
-	width:60px;
+	width:60px !important;
 	float:left;
 	position:relative;
 	
@@ -2401,11 +2401,14 @@ ul.cws-wall-user span.time{
 	
 }
 .comment-user-img{
-	width:28px;
+	width:28px !important;
 }
 .comment-user-img img{
-	
+	width:28px !important;
 	margin:6px 0 0 0;
+}
+.add-on img{
+	width:20px !important;
 }
 .cws-status-post, .cws-wall-link-comment{
 	width:468px;
