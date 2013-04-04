@@ -2378,8 +2378,7 @@ display: none;
 .wall-user-img{
 	width:60px !important;
 	float:left;
-	position:relative;
-	
+	position:relative;	
 }
 .commentable-wall-item-container{
 	width:490px;
@@ -2404,7 +2403,6 @@ ul.cws-wall-user span.time{
 	width:28px !important;
 }
 .comment-user-img img{
-	width:28px !important;
 	margin:6px 0 0 0;
 }
 .add-on img{
@@ -2539,8 +2537,8 @@ p.wall-posting-comment{
 	overflow:hidden;
 }
 
-.wall-user-img img.u-avatar{width:38px !important;height:38px !important}
-.comment-user-img img.u-avatar{width: 28px !important; height:28px !important}
-.comment-form img.u-avatar{width: 20px !important; height:20px !important}
+.wall-user-img img.u-avatar, .wall-user-img img{width:38px !important;height:38px !important}
+.comment-user-img img.u-avatar, .comment-user-img img{width: 28px !important; height:28px !important}
+.comment-form img.u-avatar, .comment-form img{width: 20px !important; height:20px !important}
 
 
