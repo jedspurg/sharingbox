@@ -1,6 +1,5 @@
 <?php  
 defined('C5_EXECUTE') or die(_("Access Denied."));
-Loader::model('sb_post','sharingbox');
 class SharingboxBlockController extends BlockController {
 	
 	protected $btTable = 'btSharingbox';
@@ -27,6 +26,7 @@ class SharingboxBlockController extends BlockController {
 	}
 		
 	private function getPosts($offset = 0, $sbUID = 0){
+		Loader::model('sb_post','sharingbox');
 		$sbModel = new SharingboxPost();
 		return $sbModel->getPosts($offset,$sbUID);
 	}
@@ -121,6 +121,7 @@ class SharingboxBlockController extends BlockController {
 		$vf = Loader::helper('validation/form');
 		$vf->addRequiredToken('sharing_box');
 		$u = new User();
+		Loader::model('sb_post','sharingbox');
 		$sbModel = new SharingboxPost();
 		if($u->isRegistered() && $vf->test()){	
 			$statext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($statext) );
@@ -139,6 +140,7 @@ class SharingboxBlockController extends BlockController {
 		$vf = Loader::helper('validation/form');
 		$vf->addRequiredToken('sharing_box');
 		$u = new User();
+		Loader::model('sb_post','sharingbox');
 		$sbModel = new SharingboxPost();
 		if($u->isRegistered() && $vf->test()){	
 			$handle = 'sb_link';
@@ -155,6 +157,7 @@ class SharingboxBlockController extends BlockController {
 		$vf = Loader::helper('validation/form');
 		$vf->addRequiredToken('sharing_box');
 		$u = new User();
+		Loader::model('sb_post','sharingbox');
 		$sbModel = new SharingboxPost();
 		$wall_link = $this->prep_link_share($statext, $statlinkcomment);
 		if($u->isRegistered() && $vf->test()){	
@@ -170,6 +173,7 @@ class SharingboxBlockController extends BlockController {
 		$vf = Loader::helper('validation/form');
 		$vf->addRequiredToken('sharing_box');
 		$u = new User();
+		Loader::model('sb_post','sharingbox');
 		$sbModel = new SharingboxPost();
 		$statext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($statext) );
 		$wall_status = $this->prep_status_share($statext);
@@ -187,6 +191,7 @@ class SharingboxBlockController extends BlockController {
 		$vf->addRequiredToken('sharing_box');
 		$u = new User();
 		if($u->isRegistered() && $vf->test()){
+			Loader::model('sb_post','sharingbox');
 			$sbModel = new SharingboxPost();
 			$sbModel->deletePost($pID);
 		}
@@ -221,6 +226,7 @@ class SharingboxBlockController extends BlockController {
 		Loader::library('file/types');
 		Loader::model('file_list');
 		Loader::model('file_set');
+		Loader::model('sb_post','sharingbox');
 		$sbModel = new SharingboxPost();
 		$handle = 'sb_photo';
 		
@@ -326,11 +332,13 @@ class SharingboxBlockController extends BlockController {
 	}
 	
 	public function getPostUserID($pID){
+		Loader::model('sb_post','sharingbox');
 		$sbModel = new SharingboxPost();
 		return $sbModel->getPosterUserID($pID);
 	}
 	
 	public function getComments($pID){
+		Loader::model('sb_post','sharingbox');
 		$sbModel = new SharingboxPost();
 		return $sbModel->getComments($pID);
 	}
@@ -355,6 +363,7 @@ class SharingboxBlockController extends BlockController {
 	private function saveComment($data) {
 		$vf = Loader::helper('validation/form');
 		$vf->addRequiredToken('sharing_box');
+		Loader::model('sb_post','sharingbox');
 		$sbModel = new SharingboxPost();
 		$sbModel->saveComment($data);
 	}
@@ -364,6 +373,7 @@ class SharingboxBlockController extends BlockController {
 		$vf = Loader::helper('validation/form');
 		$vf->addRequiredToken('sharing_box');
 		if($u->isRegistered() && $vf->test()){
+			Loader::model('sb_post','sharingbox');
 			$sbModel = new SharingboxPost();	
 			$sbModel->deleteComment($commID);
 		}
@@ -373,6 +383,7 @@ class SharingboxBlockController extends BlockController {
 		$u = new User();
 		$vf = Loader::helper('validation/form');
 		$vf->addRequiredToken('sharing_box');
+		Loader::model('sb_post','sharingbox');
 		$sbModel = new SharingboxPost();
 		$commText = addslashes($commText);
 		if($u->isRegistered() && $vf->test()){
