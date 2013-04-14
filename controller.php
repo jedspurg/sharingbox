@@ -5,7 +5,7 @@ class SharingboxPackage extends Package {
 
 	protected $pkgHandle = 'sharingbox';
 	protected $appVersionRequired = '5.6';
-	protected $pkgVersion = '1.0.5';
+	protected $pkgVersion = '1.0.6';
 	
 	public function getPackageDescription() {
 		return t('Share statuses and links socially.');
