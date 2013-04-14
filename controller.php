@@ -5,7 +5,7 @@ class SharingboxPackage extends Package {
 
 	protected $pkgHandle = 'sharingbox';
 	protected $appVersionRequired = '5.6';
-	protected $pkgVersion = '1.0.6';
+	protected $pkgVersion = '1.0.7';
 	
 	public function getPackageDescription() {
 		return t('Share statuses and links socially.');
@@ -19,6 +19,7 @@ class SharingboxPackage extends Package {
 		$pkt = Loader::helper('concrete/urls');
 		$pkg = Package::getByHandle('sharingbox'); 
 		Events::extend('on_user_friend_add', 'SbEvents', 'friend_add', __DIR__.'/libraries/sb_events.php');
+		Events::extend('on_user_delete', 'SbEvents', 'user_delete', __DIR__.'/libraries/sb_events.php');
 	}
 	
 	public function install() {

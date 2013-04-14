@@ -21,5 +21,12 @@ class SbEvents{
 
 		
 	}
+
+	public function user_delete($user){
+		Loader::model('sb_post','sharingbox');
+		$sbModel = new SharingboxPost();
+		$uID = $user->getUserID();
+		$sbModel->deleteUserPostsAndComments($uID);
+	}
 	
 }

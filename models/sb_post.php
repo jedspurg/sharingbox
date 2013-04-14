@@ -59,8 +59,15 @@ class SharingboxPost extends Model{
 	public function deletePost($pID){
 		$sql="DELETE FROM SharingboxPosts WHERE pID = ?"; 
 		$this->db->execute($sql, array($pID));
-		$sql="DELETE FROM SharingboxComments WHERE pID = ?'"; 
+		$sql="DELETE FROM SharingboxComments WHERE pID = ?"; 
 		$this->db->execute($sql, array($pID));
+	}
+
+	public function deleteUserPostsAndComments($uID){
+		$sql="DELETE FROM SharingboxPosts WHERE uID = ?"; 
+		$this->db->execute($sql, array($uID));
+		$sql="DELETE FROM SharingboxComments WHERE uID = ?"; 
+		$this->db->execute($sql, array($uID));
 	}
 	
 	public function updatePost($pID, $post, $sw){
