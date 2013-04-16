@@ -11,7 +11,7 @@ if($u->isRegistered() && $visibility > 0){?>
            <?php  
            $gallerybox = Loader::package('gallerybox'); 
            if (is_object($gallerybox)) {?>
-               <div id="cws-photo"><a data-toggle="modal" href="#cwsPhotoUploadModal"><i class="icon-camera"></i> <?php  echo t('Photo')?></a></div>
+               <div id="cws-photo"><a><i class="icon-camera"></i> <?php  echo t('Photo')?></a></div>
            <?php  }?>
         </div>
         <div class="clearfix"></div>
