@@ -37,25 +37,25 @@ if($u->isRegistered() && $visibility > 0){?>
             </form>
         </div>
         
-         <div class="modal hide" id="cwsPhotoUploadModal" role="dialog" aria-labelledby="cwsPhotoUpload" aria-hidden="true" data-backdrop="true">
-	<div class="modal-header">
-		<h3 id="cwsPhotoUpload"><?php echo t('Upload Images')?></h3>
-	</div>
+         <div class="modal hide ccm-ui" id="cwsPhotoUploadModal" role="dialog" aria-labelledby="cwsPhotoUpload" aria-hidden="true" data-backdrop="true">
+        	<div class="modal-header">
+        		<h3 id="cwsPhotoUpload"><?php echo t('Upload Images')?></h3>
+        	</div>
 	
-        <div class="modal-body">
-        <form id="cws-photo-upload-form" action="<?php  echo DISPATCHER_FILENAME?>" method="post" enctype="multipart/form-data">
-            <table border="0" width="100%" cellspacing="0" cellpadding="0" id="ccm-file-upload-multiple-list">
-                <tr>
-                    <th colspan="2">
-                        <div style="width: 80px; float: right">
-                            <span id="ccm-file-upload-multiple-spanButtonPlaceHolder"></span>
-                        </div>
-                        <?php  echo t('Upload Queue');?>
-                    </th>
-                </tr>
-            </table>
-        </div>
-        <div class="modal-footer">
+          <div class="modal-body">
+          <form id="cws-photo-upload-form" action="<?php  echo DISPATCHER_FILENAME?>" method="post" enctype="multipart/form-data">
+              <table border="0" width="100%" cellspacing="0" cellpadding="0" id="ccm-file-upload-multiple-list">
+                  <tr>
+                      <th colspan="2">
+                          <div style="width: 80px; float: right">
+                              <span id="ccm-file-upload-multiple-spanButtonPlaceHolder"></span>
+                          </div>
+                          <?php  echo t('Upload Queue');?>
+                      </th>
+                  </tr>
+              </table>
+          </div>
+          <div class="modal-footer">
             <button id="photo-upload-btn" class="btn btn-primary" onclick="swfu.startUpload();return false;" data-loading-text="Uploading..." autocomplete="off"><?php   echo t('Start upload')?></button>
             <button class="btn pull-left"  data-dismiss="modal" aria-hidden="true" onclick="swfu.cancelQueue();" id="ccm-file-upload-multiple-btnCancel"><?php   echo t('Cancel')?></button>
             </form>
