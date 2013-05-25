@@ -207,38 +207,70 @@ class SharingboxBlockController extends BlockController {
 				  $statext = 'http://'.$statext;
 		}
 		$parse = parse_url($statext);
-		if($parse['host'] == 'soundcloud.com' || $parse['host'] == 'www.soundcloud.com'){
-			$api = 'http://api.soundcloud.com/resolve.json?url='.$statext.'&client_id=3d85b802b38d8507418f3c84d0be97d6';
-			$json = $this->getUrlContents($api);
-			$decode = json_decode($json);
-			switch ($decode->kind){
-				case 'track':
-        $embed = '<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'.$decode->id.'"></iframe>';
+		$host = preg_replace('#^www\.(.+\.)#i', '$1', $parse['host']);
+		$params = $this->convertUrlQuery($parse['query']);
+		$hidden_edit = '<input class="hidden-link-edit" type="hidden" value="'.$statext.'"/>';
+		switch ($host){
+
+			case 'soundcloud.com':
+				$api = 'http://api.soundcloud.com/resolve.json?url='.$statext.'&client_id=3d85b802b38d8507418f3c84d0be97d6';
+				$json = $this->getUrlContents($api);
+				$decode = json_decode($json);
+				switch ($decode->kind){
+					case 'track':
+	        	$embed = '<iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F'.$decode->id.'"></iframe>';
+						break;
+					case 'user':
+	          	$embed = '<iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Fusers%2F'.$decode->id.'"></iframe>';
+	        		break;
+	        case 'playlist':
+	          $embed = '<iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F'.$decode->id.'"></iframe>';
+	       		break;
+				}
+				$wall_link ='<div class="cws-wall-link-comment">'.strip_tags($statlinkcomment).'</div><div class="cws-wall-link">'.$embed.$hidden_edit.'</div>';
 				break;
-				case 'user':
-          $embed = '<iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Fusers%2F'.$decode->id.'"></iframe>';
-        break;
-        case 'playlist':
-          $embed = '<iframe width="100%" height="450" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Fplaylists%2F'.$decode->id.'"></iframe>';
-        break;
-			}
-			$wall_link ='<div class="cws-wall-link-comment">'.strip_tags($statlinkcomment).'</div><div class="cws-wall-link">'.$embed.'</div>';
-		}elseif($parse['host'] == 'mixcloud.com' || $parse['host'] == 'www.mixcloud.com' ){
-      $embed = '<iframe width="466" height="466" src="http://www.mixcloud.com/widget/iframe/?feed='.$statext.'%3Flimit%3D10&embed_type=widget_standard" frameborder="0"></iframe>';
-      $wall_link ='<div class="cws-wall-link-comment">'.strip_tags($statlinkcomment).'</div><div class="cws-wall-link">'.$embed.'</div>';
-    }else{
-			$urlData = $this->getUrlData($statext);
-			if ($urlData['title'] == ''){
-				$link_title = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '\4', $statext );
-			}else{
-				$link_title = $urlData['title'];
-			}
-			$link_desc = $urlData['metaTags']['description']['value'];
-			
-			$wall_link ='<div class="cws-wall-link-comment">'.strip_tags($statlinkcomment).'</div><div class="cws-wall-link"><p><i class="icon-bookmark"></i> <a href="'.$statext.'" target="_blank"><strong>'.$link_title.'</strong></a><br/><span class="link-desc">'.$link_desc.'</span></p></div>';
+
+			case 'mixcloud.com':
+		    $embed = '<iframe width="466" height="466" src="http://www.mixcloud.com/widget/iframe/?feed='.$statext.'%3Flimit%3D10&embed_type=widget_standard" frameborder="0"></iframe>';
+		    $wall_link ='<div class="cws-wall-link-comment">'.strip_tags($statlinkcomment).'</div><div class="cws-wall-link">'.$embed.$hidden_edit.'</div>';
+		    break;
+
+		  case 'youtube.com':
+		    $embed = '<iframe width="466" height="350" src="http://www.youtube.com/embed/'.$params['v'].'" frameborder="0" allowfullscreen></iframe>';
+		    $wall_link ='<div class="cws-wall-link-comment">'.strip_tags($statlinkcomment).'</div><div class="cws-wall-link">'.$embed.$hidden_edit.'</div>';
+		    break;
+
+		  case 'vimeo.com':
+		    $embed = '<iframe src="http://player.vimeo.com/video'.$parse['path'].'?title=0&amp;byline=0&amp;portrait=0&amp;color=ffab03" width="466" height="350" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>';
+		    $wall_link ='<div class="cws-wall-link-comment">'.strip_tags($statlinkcomment).'</div><div class="cws-wall-link">'.$embed.$hidden_edit.'</div>';
+		    break;
+
+		  default:
+				$urlData = $this->getUrlData($statext);
+				if ($urlData['title'] == ''){
+					$link_title = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '\4', $statext );
+				}else{
+					$link_title = $urlData['title'];
+				}
+				$link_desc = $urlData['metaTags']['description']['value'];
+				$wall_link ='<div class="cws-wall-link-comment">'.strip_tags($statlinkcomment).'</div><div class="cws-wall-link"><p><i class="icon-bookmark"></i> <a href="'.$statext.'" target="_blank"><strong>'.$link_title.'</strong></a><br/><span class="link-desc">'.$link_desc.'</span></p>'.$hidden_edit.'</div>';
+				break;
 		}
+
 		return $wall_link;
 		
+	}
+
+	private function convertUrlQuery($query) { 
+    $queryParts = explode('&', $query); 
+    
+    $params = array(); 
+    foreach ($queryParts as $param) { 
+        $item = explode('=', $param); 
+        $params[$item[0]] = $item[1]; 
+    } 
+    
+    return $params; 
 	}
 	
 	public function photo_share($uID,$numFiles,$sw){

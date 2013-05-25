@@ -2180,12 +2180,17 @@ function readyCommentStream(){
 		var statusText = $(".cws-status-post", "#posting_" + pID).text();
 		var commentText = $(".cws-wall-link-comment", "#posting_" + pID).text();
 		var statLinkParent = $(".cws-wall-link", "#posting_" + pID);
+    var embedLink = $(".hidden-link-edit", statLinkParent).val();
 		var statLink = $("a", statLinkParent).attr("href");
-		if (statLink == null){
+		if (statLink == null && embedLink == null){
 			$("#statext-edit_" + pID).val(statusText);
 		}else{
 			$("#statext-edit_" + pID).val(commentText);
-			$("#statlink-edit_" + pID).val(statLink);
+      if(embedLink == null){
+			  $("#statlink-edit_" + pID).val(statLink);
+      }else{
+        $("#statlink-edit_" + pID).val(embedLink);
+      }
 		}
 		$(".cws-posting").show();
 		$(".editPosting").hide();
@@ -2237,7 +2242,7 @@ function readyCommentStream(){
 		var pType = $("input#pType_" + pID).val();
 	  var sw = $("input#sw-edit_" + pID).val();
 		var offset = 10;
-		if(pType == 'CWS-Link'){
+		if(pType == 'sb_link'){
 			var  statext = $("input#statlink-edit_" + pID).val();
 			var statlinkcomment = $("input#statext-edit_" + pID).val();
 		}else{
