@@ -5,12 +5,12 @@
 			<key />
 			<unsigned />
     </field>
-		<field name="visibility" type="I" size="10">
-		</field>
-		<field name="type" type="I" size="10">
-		</field>
-		<field name="uID" type="I" size="10">
-			<unsigned />
-		</field>
+	<field name="visibility" type="I" size="10">
+	</field>
+	<field name="type" type="I" size="10">
+	</field>
+	<field name="uID" type="I" size="10">
+		<unsigned />
+	</field>
   </table>
 </schema>

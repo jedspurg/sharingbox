@@ -305,6 +305,7 @@ class SharingboxBlockController extends BlockController {
 		$ih =Loader::helper('image');
 		if($numFiles == 1){
 			$userText = 'uploaded a photo ';
+			$gbxID = $files[0]->getFileID();
 		}else{
 			$userText = 'uploaded some photos ';
 		}
@@ -319,7 +320,6 @@ class SharingboxBlockController extends BlockController {
 		$sharedImageList .=' - view <a href="'.View::url('/gallerybox/user',$uID).'">'.$username.'\'s gallery</a></div>
 		<div class="cws-photo-share-wrapper">';
 		foreach($files as $img){
-
 			$sharedImageList .='<div class="cws-photo-item"><div class="cws-img-wrapper"><a href="'.View::url('/gallerybox/image',$img->getFileID()).'">';
 			$fv = $img->getApprovedVersion();
 			$imgt = $fv->getTitle();
@@ -336,7 +336,7 @@ class SharingboxBlockController extends BlockController {
 		}
 		$sharedImageList .='</div><div class="clear"></div>';
 
-		$sbModel->savePost($uID, $sharedImageList, $sw, $handle);
+		$sbModel->savePost($uID, $sharedImageList, $sw, $handle, $gbxID);
 		if ($_REQUEST['ajax'] == true) {
 			Loader::packageElement('sb_postings','sharingbox', array('postings'=>$this->getPosts()));	
 			exit;
@@ -390,22 +390,28 @@ class SharingboxBlockController extends BlockController {
 		return $sbModel->getPosterUserID($pID);
 	}
 	
-	public function getComments($pID){
+	public function getComments($pID, $ptHandle, $gbxID=0){
 		Loader::model('sb_post','sharingbox');
 		$sbModel = new SharingboxPost();
-		return $sbModel->getComments($pID);
+		if($ptHandle == 'sb_photo' && $gbxID > 0){
+			return $sbModel->getGbxComments($gbxID);
+		}else{
+			return $sbModel->getComments($pID);
+		}
 	}
 	
 	public function add_comment($pID, $comtext){
 		$u = new User();
 		$vf = Loader::helper('validation/form');
+		Loader::model('sb_post','sharingbox');
+		$sbModel = new SharingboxPost();
 		$vf->addRequiredToken('sharing_box');
 		if($u->isRegistered() && $vf->test()){
 			$comtext = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="_blank">\4</a>', strip_tags($comtext) );
 			$data = array('pID' => $pID, 'comUID' => $u->getUserID(), 'cwsComment' => $comtext);
 			$this->saveComment($data);
 			if ($_REQUEST['ajax'] == true) {
-				$comments = $this->getComments($pID);
+				$comments = $this->getComments($pID,$sbModel->getPostTemplate($pID),$sbModel->getPostGbxID($pID));
 				$postUserID = $this->getPostUserID($pID);
 				Loader::packageElement('sb_comments','sharingbox', array('comments'=>$comments,'postUserID'=>$postUserID,'pID'=>$pID));
 				exit;
@@ -442,7 +448,7 @@ class SharingboxBlockController extends BlockController {
 		if($u->isRegistered() && $vf->test()){
 			$sbModel->updateComment($pID, $commID, $commText);
 			if ($_REQUEST['ajax'] == true) {
-					$comments = $this->getComments($pID);
+					$comments = $this->getComments($pID,$sbModel->getPostTemplate($pID),$sbModel->getPostGbxID($pID));
 					$postUserID = $this->getPostUserID($pID);
 					Loader::packageElement('sb_comments','sharingbox', array('comments'=>$comments,'postUserID'=>$postUserID,'pID'=>$pID));
 				exit;

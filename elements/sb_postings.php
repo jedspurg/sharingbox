@@ -6,6 +6,7 @@ $date = Loader::helper('date');
 Loader::model('users_friends');
 $uh = Loader::helper('concrete/urls');
 $controller = new SharingboxBlockController();
+$vbw = Loader::helper('validation/banned_words');
 ?>
 <div id="sb-wall" class="commentable_sharingbox_wall wall-share-wrap">
   <div class="commentable_sharingbox_wall wall-share-wrap">
@@ -66,7 +67,10 @@ if(is_array($postings)):
                   <div class="clearfix"></div>
 									
                   <div id="posting_<?php echo $post->pID?>" class="cws-posting">
-                    <?php   echo $post->post ?>
+                    <?php
+                    $vbw->hasBannedWords($post->post);
+                    echo $post->post; 
+                    ?>
                   </div>
 
                   <div id="editPosting_<?php echo $post->pID?>" class="editPosting hide">
@@ -93,7 +97,7 @@ if(is_array($postings)):
                  </div>
                 <div class="cws-comment-box"> 
 									<?php 
-                  $comments = $controller->getComments($post->pID);
+                  $comments = $controller->getComments($post->pID, $post->ptHandle, $post->gbxID);
                   $postUserID = $controller->getPostUserID($post->pID);
                   Loader::packageElement('sb_comments','sharingbox', array('comments'=>$comments,'postUserID'=>$postUserID,'pID'=>$post->pID));
                   ?>

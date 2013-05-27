@@ -2170,7 +2170,7 @@ function readyCommentStream(){
 	});
 	
 	$(".commButtonToggle").click(function() {
-		var commID = $(this).data('commid');
+		var commID = $(this).attr('data-commid');
 		$(".delete-comment-btn").attr("id", "commentDelete_" + commID);
 	});
 	
