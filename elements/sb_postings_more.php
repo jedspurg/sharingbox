@@ -6,6 +6,7 @@ $date = Loader::helper('date');
 Loader::model('users_friends');
 $uh = Loader::helper('concrete/urls');
 $controller = new SharingboxBlockController();
+$vbw = Loader::helper('validation/banned_words');
 
 if(is_array($postings)):
 	foreach ($postings as $post):
