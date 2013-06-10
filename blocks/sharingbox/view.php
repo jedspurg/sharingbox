@@ -1,6 +1,7 @@
 <?php 
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
+$c = Page::getCurrentPage();
 if($u->isRegistered() && $visibility > 0){?>
 <div id="cws-share-wrapper" class="wall-share-wrap">
     <div class="well">
@@ -65,7 +66,7 @@ if($u->isRegistered() && $visibility > 0){?>
     </div>  
     
 <?php  
-if (is_object($gallerybox)) {
+if (is_object($gallerybox) && !$c->isEditMode()) {
 	Loader::packageElement('sb_gb_uploader','sharingbox', array('searchInstance' => $searchInstance));
 }
 ?>            
@@ -73,7 +74,7 @@ if (is_object($gallerybox)) {
 <?php }?>
 
 <?php 
-if(is_array($postings)){
+if(is_array($postings) && !$c->isEditMode()){
 	Loader::packageElement('sb_postings','sharingbox', array('postings'=>$postings));
 }
 ?>
