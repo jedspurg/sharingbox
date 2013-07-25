@@ -8,12 +8,6 @@
 		<field name="uID" type="I">
 			<default value="0"/>
 		</field>
-		<field name="cID" type="I">
-			<default value="0"/>
-		</field>
-		<field name="upID" type="I">
-			<default value="0"/>
-		</field>
 		<field name="postTemplate" type="C" size="100">
 		</field>
 		<field name="gbxID" type="I">
