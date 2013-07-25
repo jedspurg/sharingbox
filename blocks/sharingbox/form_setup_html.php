@@ -11,7 +11,7 @@ $uForm = Loader::helper('form/user_selector');
 
 <div class="ccm-block-field-group">
 	<label for="type"><strong><?php   echo t('Show Posts for:')?></strong></label>
-	<?php   print $form->select('type', array('3'=>t('Everyone (global site postings)'), '1'=>t('Profile'), '2'=>t('Selected User'), $type);?>
+	<?php   print $form->select('type', array('3'=>t('Everyone (global site postings)'), '1'=>t('Profile'), '2'=>t('Selected User'), '4'=>t('This Page Only')), $type);?>
 </div>
 
 <div class="ccm-block-field-group">
