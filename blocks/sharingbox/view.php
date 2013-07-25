@@ -2,7 +2,16 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $c = Page::getCurrentPage();
-if($u->isRegistered() && $visibility > 0){?>
+
+if ($c->isEditMode()) { 
+?>
+  <div class="ccm-edit-mode-disabled-item" style="width:<?php echo $vWidth?>px; height:<?php echo $vHeight?>px;">
+    <div style="padding:8px 0px; padding-top: <?php echo round($vHeight/2)-10?>px;"><?php echo t('Content disabled in edit mode.')?></div>
+  </div>
+<?php  
+  }else{
+    if($u->isRegistered() && $visibility > 0){
+?>
 <div id="cws-share-wrapper" class="wall-share-wrap">
     <div class="well">
         <div id="share-bar">
@@ -66,7 +75,7 @@ if($u->isRegistered() && $visibility > 0){?>
     </div>  
     
 <?php  
-if (is_object($gallerybox) && !$c->isEditMode()) {
+if (is_object($gallerybox)) {
 	Loader::packageElement('sb_gb_uploader','sharingbox', array('searchInstance' => $searchInstance));
 }
 ?>            
@@ -74,7 +83,7 @@ if (is_object($gallerybox) && !$c->isEditMode()) {
 <?php }?>
 
 <?php 
-if(is_array($postings) && !$c->isEditMode()){
+if(is_array($postings)){
 	Loader::packageElement('sb_postings','sharingbox', array('postings'=>$postings));
 }
 ?>
@@ -83,6 +92,7 @@ if(is_array($postings) && !$c->isEditMode()){
   <div id="more-posts"></div>
   <div id="more-posts-loader" class="loading"></div>
 </div>
+<?php }?>
   
 
 
