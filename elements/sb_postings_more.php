@@ -27,6 +27,7 @@ if(is_array($postings)):
 		
 		if($myfriend || $sw == '2' || $u->getUserID() == $poster->getUserID() || $u->isSuperUser()):
 ?>
+      <ul class="sharingbox_wall">
         <li id="cws-item-class_<?php echo $post->pID?>" class="sharingbox-wall-item">
         	<div class="wall-user-img">
             <a href="<?php   echo $profile_url ?>"><?php   echo $av->outputUserAvatar($poster, false, 0.5) ?></a>
@@ -101,7 +102,7 @@ if(is_array($postings)):
           <div class="clearfix"></div>       
           
         </li>
-        
+      </ul>
         
         <div class="modal hide" id="deletePostModal_<?php echo $post->pID?>" role="dialog" aria-labelledby="PostModal_<?php echo $post->pID?>" aria-hidden="true" data-backdrop="true">
           <div class="modal-header">
