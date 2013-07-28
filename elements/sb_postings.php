@@ -107,50 +107,46 @@ if(is_array($postings)):
           <div class="clearfix"></div>       
           
         </li>
-        
-        
-        <div class="modal hide" id="deletePostModal_<?php echo $post->pID?>" role="dialog" aria-labelledby="PostModal_<?php echo $post->pID?>" aria-hidden="true" data-backdrop="true">
-          <div class="modal-header">
-            <h3 id="CommentPost_<?php echo $post->pID?>"><?php echo t('Delete Post')?></h3>
-          </div>
-          <div class="modal-body">
-			
-            <p><?php echo t('Are you sure that you want to delete this post?<br/>This action will also delete any comments associated with this post.')?></p>
-          </div>
-          <div class="modal-footer">
-          	<form id="cws-post-delete-form" method="post" action="">
-          	
-            <button class="btn" data-dismiss="modal" aria-hidden="true"><?php echo t('Cancel')?></button>
-            <button id="deletePost_<?php echo $post->pID?>" class="btn btn-danger delete-post-btn"><?php echo t('Delete')?></button>
-  			</form>
-          </div>
-        </div>
-        
-        
-        <div class="modal hide" id="deleteCommentModal" role="dialog" aria-labelledby="CommentModal" aria-hidden="true" data-backdrop="true">
-          <div class="modal-header">
-            <h3 id="CommentModal"><?php echo t('Delete Comment')?></h3>
-          </div>
-          <div class="modal-body">
-            
-            <p><?php echo t('Are you sure that you want to delete this comment?')?></p>
-          </div>
-          <div class="modal-footer">
-            <form id="cws-post-delete-form" method="post" action="">
-            
-            <button class="btn" data-dismiss="modal" aria-hidden="true"><?php echo t('Cancel')?></button>
-            <button id="" class="btn btn-danger delete-comment-btn"><?php echo t('Delete')?></button>
-            </form>
-          </div>
-        </div>
-        
-       
 <?php   
 		endif;
 	endforeach; 
 endif;
 ?>
   	</ul>
+    <div class="modal hide" id="deletePostModal_<?php echo $post->pID?>" role="dialog" aria-labelledby="PostModal_<?php echo $post->pID?>" aria-hidden="true" data-backdrop="true">
+    <div class="modal-header">
+      <h3 id="CommentPost_<?php echo $post->pID?>"><?php echo t('Delete Post')?></h3>
+    </div>
+    <div class="modal-body">
+
+      <p><?php echo t('Are you sure that you want to delete this post?<br/>This action will also delete any comments associated with this post.')?></p>
+    </div>
+    <div class="modal-footer">
+      <form id="cws-post-delete-form" method="post" action="">
+      
+      <button class="btn" data-dismiss="modal" aria-hidden="true"><?php echo t('Cancel')?></button>
+      <button id="deletePost_<?php echo $post->pID?>" class="btn btn-danger delete-post-btn"><?php echo t('Delete')?></button>
+  </form>
+    </div>
+  </div>
+  
+  
+  <div class="modal hide" id="deleteCommentModal" role="dialog" aria-labelledby="CommentModal" aria-hidden="true" data-backdrop="true">
+    <div class="modal-header">
+      <h3 id="CommentModal"><?php echo t('Delete Comment')?></h3>
+    </div>
+    <div class="modal-body">
+      
+      <p><?php echo t('Are you sure that you want to delete this comment?')?></p>
+    </div>
+    <div class="modal-footer">
+      <form id="cws-post-delete-form" method="post" action="">
+      
+      <button class="btn" data-dismiss="modal" aria-hidden="true"><?php echo t('Cancel')?></button>
+      <button id="" class="btn btn-danger delete-comment-btn"><?php echo t('Delete')?></button>
+      </form>
+    </div>
+  </div>
   </div>
 </div>
 <script type="text/javascript">
