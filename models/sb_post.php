@@ -10,15 +10,22 @@ class SharingboxPost extends Model{
 		$this->db = Loader::db();
 	}
 	
-	public function getPosts($offset, $uID){
-		
+	public function getPosts($offset, $uID, $cID, $upID){
+		$data = array();
 		$sql = "SELECT * FROM SharingboxPosts";
+    if($cID != 0){
+      $sql .= " WHERE cID = ?";
+      array_push($data, $cID);
+    }
+    if($upID != 0){
+      $sql .= " WHERE upID = ?";
+      array_push($data, $upID);
+    }
 		if($uID != 0){
 			$sql .= " WHERE uID = ?";
-			$data = array($uID,intval($offset));
-		}else{
-			$data = array(intval($offset));
+			array_push($data, $uID);
 		}
+		array_push($data, intval($offset));
 		$sql .= " ORDER BY entryDate DESC";
 		$sql .= " LIMIT ?, 10";
 		$results = $this->db->query($sql,$data);
@@ -145,7 +152,5 @@ class SharingboxPost extends Model{
     }
 		$this->db->execute($sql, array($commID));
 	}
-	
-	
 	
 }
