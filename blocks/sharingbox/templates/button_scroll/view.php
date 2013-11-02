@@ -92,7 +92,7 @@ if(is_array($postings)){
   <div id="more-posts-loader" class="loading"></div>
 </div>
 <div class="wall-share-wrap">
-  <button class="btn" style="float:right;" id="more-posts-loader-button">Load More Posts</button>
+  <button class="btn" style="float:right;" id="more-posts-loader-button"><?php echo t("Load More Posts") ?></button>
   <div class="clearfix"></div>
 </div>
 <?php }?>
