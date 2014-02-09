@@ -1,4 +1,4 @@
-<?php   
+<?php
 defined('C5_EXECUTE') or die("Access Denied.");
 $form = Loader::helper('form');
 $uForm = Loader::helper('form/user_selector');
@@ -14,12 +14,8 @@ $uForm = Loader::helper('form/user_selector');
 	<?php   print $form->select('type', array('3'=>t('Everyone (global site postings)'), '1'=>t('Profile'), '2'=>t('Selected User')), $type);?>
 </div>
 
-<div class="ccm-block-field-group">
-  <div id="user-selector2" <?php   if($type != '2'){?>style="display:none"<?php   }?>>
-  <?php  
-  print $uForm->selectUser('uID', $uID, $javascriptFunc = 'ccm_triggerSelectUser');
-  ?>
-  </div>
+<div id="user-selector2" class="ccm-block-field-group" <?php if($type != '2'){?>style="display:none"<?php }?>>
+  <?php print $uForm->selectUser('uID', $uID, $javascriptFunc = 'ccm_triggerSelectUser'); ?>
 </div>
 
 

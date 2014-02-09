@@ -1,5 +1,5 @@
-<?php 
-defined('C5_EXECUTE') or die("Access Denied."); 
+<?php
+defined('C5_EXECUTE') or die("Access Denied.");
 $u = new User();
 $cui = UserInfo::getByID($u->getUserID());
 $av = Loader::helper('concrete/avatar');
@@ -9,13 +9,13 @@ Loader::model('sb_post','sharingbox');
 $sbModel = new SharingboxPost();
 $vbw = Loader::helper('validation/banned_words');
 if($sbModel->getPostTemplate($pID) == 'sb_photo' && $sbModel->getPostGbxID($pID) > 0){
-  $gbx_prefix = '0000';	
+  $gbx_prefix = '0000';
 }
 ?>
 <div class="clear"></div>
   <div class="cws-comments_<?php  echo $pID?> cws-comments">
   	<div class="cws-user-comments">
-                 
+
 				<?php
 				for($i = 0;$i < count($comments);$i++){
 				$comui = UserInfo::getByID($comments[$i]['uID']);
@@ -24,7 +24,7 @@ if($sbModel->getPostTemplate($pID) == 'sb_photo' && $sbModel->getPostGbxID($pID)
 				<div id ="cws-wall-post-comment_<?php echo $gbx_prefix.$comments[$i]['commentID']?>" class="cws-wall-post-comment">
 					<ul class="cws-wall-user">
 						<li class="comment-user-img"><?php echo $av->outputUserAvatar($comui,false,0.35)?></li>
-				                        
+
 						<?php
 							if ($comui->getAttribute('first_name') == ''){
 								$commname =  $comui->getUserName();
@@ -35,23 +35,23 @@ if($sbModel->getPostTemplate($pID) == 'sb_photo' && $sbModel->getPostGbxID($pID)
 
 						<li class="comment-user-name"><a href="<?php echo View::url('/profile',$comments[$i]['uID'])?>"><?php echo $commname?></a></li>
 			      <li><span class="time">(<?php echo $date->timeSince(strtotime($comments[$i]['entryDate']))?> ago)</span></li>
-								           
+
 			      <li class="cws-edit-tools">
-				      <?php if($u->getUserID() == $comments[$i]['uID']){?> 
-				      	<i id="cwsEdit_<?php echo $gbx_prefix.$comments[$i]['commentID']?>"class="icon-edit cws-edit-comment" title="<?php echo t('edit')?>"></i> 
+				      <?php if($u->getUserID() == $comments[$i]['uID']){?>
+				      	<i id="cwsEdit_<?php echo $gbx_prefix.$comments[$i]['commentID']?>"class="icon-edit cws-edit-comment" title="<?php echo t('edit')?>"></i>
 				      <?php }?>
-				      
-					  	<?php  if($u->getUserID() == $comments[$i]['uID'] or $u->getUserID() == $postUserID){?> 
+
+					  	<?php  if($u->getUserID() == $comments[$i]['uID'] or $u->getUserID() == $postUserID){?>
 				      	<a href="#deleteCommentModal" data-commid="<?php echo $gbx_prefix.$comments[$i]['commentID']?>" data-toggle="modal" class="commButtonToggle"><i class="icon-minus-sign cws-delete-comment" title="<?php echo t('delete')?>"></i></a>
 				      <?php }?>
 			      </li>
-				      
-				      
+
+
 				     </ul>
 <div class="clearfix"></div>
 
 	<p class="wall-posting-comment">
-		<?php 
+		<?php
     $vbw->hasBannedWords($comments[$i]['commentText']);
     echo stripslashes($comments[$i]['commentText']);
     ?>
@@ -73,10 +73,10 @@ if($sbModel->getPostTemplate($pID) == 'sb_photo' && $sbModel->getPostGbxID($pID)
 		<button type="cancel" name="cancel" class="btn comment-cancel" title="<?php echo t('cancel')?>" data-placement="bottom"><i class="icon-ban-circle"></i></button>
 		</div>
 </div>
-                        
-                        
+
+
 <?php }?>
-                    
+
 </div>
 
 <?php  if($u->isRegistered()){?>
@@ -93,16 +93,10 @@ if($sbModel->getPostTemplate($pID) == 'sb_photo' && $sbModel->getPostGbxID($pID)
 </div>
 
 <?php  }else{?>
-
-<a href="<?php echo $this->url('login')?>" class="btn btn-mini"><?php echo t('Login to post a comment')?></a>
-
+  <a href="<?php echo $this->url('login')?>" class="btn btn-mini"><?php echo t('Login to post a comment')?></a>
 <?php }?>
 </div>
 
-<script>
-readyCommentStream();
-	
-</script>
 
 
 
