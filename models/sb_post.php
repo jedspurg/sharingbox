@@ -2,16 +2,17 @@
 defined('C5_EXECUTE') or die("Access Denied.");
 
 class SharingboxPost extends Model{
-	
+
 	protected $db;
-	
+
 	public function __construct(){
 		parent::__construct();
 		$this->db = Loader::db();
+		$this->db->bulkBind = true;
 	}
-	
+
 	public function getPosts($offset, $uID){
-		
+
 		$sql = "SELECT * FROM SharingboxPosts";
 		if($uID != 0){
 			$sql .= " WHERE uID = ?";
@@ -42,7 +43,7 @@ class SharingboxPost extends Model{
 		}
 		return $posts;
 	}
-	
+
 	public function getPosterUserID($pID){
 		$sql="SELECT uID FROM SharingboxPosts where pID = ?";
 		$ic = $this->db->query($sql, array($pID));
@@ -50,33 +51,33 @@ class SharingboxPost extends Model{
 		$uID = $row['uID'];
 		return $uID;
 	}
-	
-	public function savePost($uID, $post, $share_with, $post_template, $gbxID = 0){		
+
+	public function savePost($uID, $post, $share_with, $post_template, $gbxID = 0){
 		$data = array($uID, $post, $share_with, $post_template, $gbxID);
-		$sql='INSERT INTO SharingboxPosts (uID,post,shareWith,postTemplate,gbxID,entryDate,updatedDate) VALUES (?,?,?,?,?,NOW(),NOW())'; 
-		$this->db->execute($sql,$data);		
+		$sql='INSERT INTO SharingboxPosts (uID,post,shareWith,postTemplate,gbxID,entryDate,updatedDate) VALUES (?,?,?,?,?,NOW(),NOW())';
+		$this->db->execute($sql,$data);
 	}
-	
+
 	public function deletePost($pID){
-		$sql="DELETE FROM SharingboxPosts WHERE pID = ?"; 
+		$sql="DELETE FROM SharingboxPosts WHERE pID = ?";
 		$this->db->execute($sql, array($pID));
-		$sql="DELETE FROM SharingboxComments WHERE pID = ?"; 
+		$sql="DELETE FROM SharingboxComments WHERE pID = ?";
 		$this->db->execute($sql, array($pID));
 	}
 
 	public function deleteUserPostsAndComments($uID){
-		$sql="DELETE FROM SharingboxPosts WHERE uID = ?"; 
+		$sql="DELETE FROM SharingboxPosts WHERE uID = ?";
 		$this->db->execute($sql, array($uID));
-		$sql="DELETE FROM SharingboxComments WHERE uID = ?"; 
+		$sql="DELETE FROM SharingboxComments WHERE uID = ?";
 		$this->db->execute($sql, array($uID));
 	}
-	
+
 	public function updatePost($pID, $post, $sw){
 		$data = array($post, $sw, $pID);
 		$sql = "UPDATE SharingboxPosts SET post=?, shareWith=? , updatedDate = NOW() WHERE pID=?";
 		$this->db->execute($sql,$data);
 	}
-	
+
 	public function getPostTemplateID($ptHandle){
 		$sql = "SELECT templateID FROM SharingboxPostTemplates WHERE handle = ?";
 		$row = $this->db->getrow($sql, array($ptHandle));
@@ -97,13 +98,13 @@ class SharingboxPost extends Model{
 		$result = $row['gbxID'];
 		return $result;
 	}
-	
+
 	public function getComments($pID){
 		$sql="SELECT * FROM SharingboxComments where pID = ?";
 		$ic = $this->db->query($sql, array($pID));
 		while($row=$ic->fetchrow()){
 			$comments[] = $row;
-		}		
+		}
 		return $comments;
 	}
 
@@ -112,7 +113,7 @@ class SharingboxPost extends Model{
 		$ic = $this->db->query($sql, array($gbxID));
 		while($row=$ic->fetchrow()){
 			$comments[] = $row;
-		}		
+		}
 		return $comments;
 	}
 
@@ -125,27 +126,25 @@ class SharingboxPost extends Model{
 		}
     $this->db->EXECUTE($sql,$data);
 	}
-	
+
 	public function updateComment($pID, $commID, $commText){
     if(substr($commID, 0, 4) == '0000'){
       $commID = substr($commID, 4);
-      $sql="UPDATE GalleryBoxComments SET commentText = ? WHERE commentID = ?"; 
+      $sql="UPDATE GalleryBoxComments SET commentText = ? WHERE commentID = ?";
     }else{
-      $sql="UPDATE SharingboxComments SET commentText = ? WHERE commentID = ?";  
+      $sql="UPDATE SharingboxComments SET commentText = ? WHERE commentID = ?";
     }
 		$this->db->execute($sql, array($commText,$commID));
 	}
-	
+
 	public function deleteComment($commID){
     if(substr($commID, 0, 4) == '0000'){
       $commID = substr($commID, 4);
       $sql="DELETE from GalleryBoxComments where commentID = ?";
     }else{
-  		$sql="DELETE FROM SharingboxComments WHERE commentID = ?"; 
+  		$sql="DELETE FROM SharingboxComments WHERE commentID = ?";
     }
 		$this->db->execute($sql, array($commID));
 	}
-	
-	
-	
+
 }
