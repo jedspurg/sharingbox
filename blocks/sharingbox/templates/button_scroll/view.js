@@ -629,7 +629,6 @@ cwsuploadComplete = function() {
 }
 
 function readyCommentStream(){
-  console.log("derp");
 
   //initialize element states
   $("#cws-status a").css('cursor', 'pointer');
