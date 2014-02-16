@@ -875,6 +875,12 @@ function postComment(pID){
 
 $(document).ready(function() {
 
+  $("#ccm-file-upload-multiple-btnCancel").on('click', function(e){
+    e.preventDefault();
+    cwsCloseModal();
+    swfu.cancelQueue();
+  });
+
   $("#more-posts-loader-button").on('click', function(e){
     $("#more-posts-loader").show();
     offset += 10;

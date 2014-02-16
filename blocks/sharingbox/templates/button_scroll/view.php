@@ -67,7 +67,7 @@ if ($c->isEditMode()) {
           </div>
           <div class="modal-footer">
             <button id="photo-upload-btn" class="btn btn-primary" onclick="swfu.startUpload();return false;" data-loading-text="Uploading..." autocomplete="off"><?php   echo t('Start upload')?></button>
-            <button class="btn pull-left"  data-dismiss="modal" aria-hidden="true" onclick="swfu.cancelQueue();" id="ccm-file-upload-multiple-btnCancel"><?php   echo t('Cancel')?></button>
+            <button class="btn pull-left"  data-dismiss="modal" aria-hidden="true" id="ccm-file-upload-multiple-btnCancel"><?php   echo t('Cancel')?></button>
             </form>
         </div>
        </div>

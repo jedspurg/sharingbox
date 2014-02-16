@@ -875,6 +875,13 @@ function postComment(pID){
 }
 
 $(document).ready(function() {
+
+  $("#ccm-file-upload-multiple-btnCancel").on('click', function(e){
+    e.preventDefault();
+    cwsCloseModal();
+    swfu.cancelQueue();
+  });
+
 	$(document).scroll(function(e){
 		if ($(window).scrollTop() + $(window).height() == $(document).height()){
 			$("#more-posts-loader").show();
