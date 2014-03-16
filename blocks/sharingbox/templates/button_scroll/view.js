@@ -621,14 +621,28 @@ cwsuploadComplete = function() {
   $(function() {
     $.post(SB_UPLOAD_COMPLETE, {ajax:1}).done(function(data) {
       $('.commentable_sharingbox_wall').before(data).remove();
-
     });
 
     return false;
   });
 }
 
-function readyCommentStream(){
+function postComment(pID){
+  $.post(SB_COMMENT_HELPER, {
+    pID       : pID,
+    comtext   : $("input#cwsComment_" + pID).val(),
+    sbUID     : sbUID,
+    ccm_token : ccm_token,
+    ajax      : 1
+  }).done(function(data) {
+    $('div.cws-comments_' + pID).before(data).remove();
+    $('div.cws-comments_' + pID).effect("highlight", {}, 800);
+  });
+
+  return false;
+}
+
+$(document).ready(function() {
 
   //initialize element states
   $("#cws-status a").css('cursor', 'pointer');
@@ -649,14 +663,14 @@ function readyCommentStream(){
     $(this).css('color', '#000000');
   });
 
-  $("#cws-status a").click(function () {
+  $("#cws-status a").on('click', function () {
     $("#statext").val(sharedTextPlaceholder).css('color', '#999999').show();
     $("#action").val('status_share');
     $("#form-button").show();
     $("#statlinkcomment-wrap").hide();
   });
 
-  $("#cws-link a").click(function () {
+  $("#cws-link a").on('click', function () {
     $("#statext").val('http://').show();
     $("#statext, #statlinkcomment").css('color', '#999999');
     $("#action").val('link_share');
@@ -665,42 +679,41 @@ function readyCommentStream(){
     $("#statlinkcomment-wrap").show();
   });
 
-  $("#cws-photo a").click(function () {
+  $("#cws-photo a").on('click', function () {
     $("#statext").val(sharedTextPlaceholder).css('color', '#999999');
     $("#statlinkcomment-wrap").hide();
     $('#cwsPhotoUploadModal').show();
   });
 
-  $("#cws-everyone").click(function () {
+  $("#cws-everyone").on('click', function () {
     $(this).hide();
     $("#sw").val( '1' );
     $("#cws-friends").show();
   });
 
-  $("#cws-friends").click(function () {
+  $("#cws-friends").on('click', function () {
     $(this).hide();
     $("#sw").val( '2' );
     $("#cws-everyone").show();
   });
 
-  $(".cws-everyone-edit").click(function () {
+  $(".cws-everyone-edit").on('click', function () {
     var pID = $(this).attr("id").match(/[\d]+$/);
     $(this).hide();
     $("#sw-edit_" + pID).val( '1' );
     $("#cws-friends_" + pID).show();
   });
 
-  $(".cws-friends-edit").click(function () {
+  $(".cws-friends-edit").on('click', function () {
     var pID = $(this).attr("id").match(/[\d]+$/);
     $(this).hide();
     $("#sw-edit_" + pID).val( '2' );
     $("#cws-everyone_" + pID).show();
   });
 
-  $('.delete-post-btn').click(function() {
+  $(document).on('click', '.delete-post-btn', function () {
     $(".tooltip").hide();
     var pID = $(this).attr("id").match(/[\d]+$/);
-    console.log("derp");
     $.post(SB_POST_DELETE, {
       pID       : pID,
       sbUID     : sbUID,
@@ -714,9 +727,12 @@ function readyCommentStream(){
     return false;
   });
 
-  $('.cws-comment-update-btn').click(function() {
+  $(document).on('click', '.cws-comment-update-btn', function() {
     $(".tooltip").hide();
     var commID = $(this).attr("id").match(/[\d]+$/);
+    if ($.isArray(commID)){
+      commID = commID[0];
+    }
     var comtext = $("input#comment-edit_" + commID).val();
     var pID = $("input#commpID_" + commID).val();
 
@@ -735,12 +751,12 @@ function readyCommentStream(){
     return false;
   });
 
-  $(".commButtonToggle").click(function() {
+  $(document).on('click', '.commButtonToggle', function () {
     var commID = $(this).attr('data-commid');
     $(".delete-comment-btn").attr("id", "commentDelete_" + commID);
   });
 
-  $('.cws-edit-post').click(function() {
+  $(document).on('click', '.cws-edit-post', function () {
     $(".tooltip").hide();
     var pID = $(this).attr("id").match(/[\d]+$/);
     var statusText = $(".cws-status-post", "#posting_" + pID).text();
@@ -765,7 +781,7 @@ function readyCommentStream(){
     $("#editPosting_" + pID).show();
   });
 
-  $('.cws-edit-comment').click(function() {
+  $(document).on('click', '.cws-edit-comment', function () {
     $(".tooltip").hide();
     var commID = $(this).attr("id").match(/[\d]+$/);
     var pID = $("input#commpID_" + commID).val();
@@ -776,20 +792,20 @@ function readyCommentStream(){
     $("#editComment_" + commID).show();
   });
 
-  $('.comment-cancel').click(function() {
+  $(document).on('click', '.comment-cancel', function () {
     $(".tooltip").hide();
     $(".cws-wall-post-comment").show();
     $(".editComment").hide();
     $(".cws-comment-form").show();
   });
 
-  $('.post-cancel').click(function() {
+  $(document).on('click', '.post-cancel', function () {
     $('.tooltip, .editPosting').hide();
     $(".cws-posting").show();
   });
 
 
-  $('.delete-comment-btn').click(function() {
+  $(document).on('click', '.delete-comment-btn', function () {
     $(".tooltip").hide();
     var commID = $(this).attr("id").match(/[\d]+$/);
     $.post(SB_COMMENT_DELETE, {
@@ -805,7 +821,7 @@ function readyCommentStream(){
     return false;
   });
 
-  $('.cws-post-update-btn').on('click', function() {
+  $(document).on('click', '.cws-post-update-btn', function() {
     $(".tooltip").hide();
     var pID     = $(this).data("id");
     var pType   = $("input#pType_" + pID).val();
@@ -819,7 +835,7 @@ function readyCommentStream(){
     }else{
       statext = $("input#statext-edit_" + pID).val();
     }
-     $.post(SB_POST_UPDATE, {
+    $.post(SB_POST_UPDATE, {
       pID             : pID,
       pType           : pType,
       statext         : statext,
@@ -828,52 +844,32 @@ function readyCommentStream(){
       sbUID           : sbUID,
       ccm_token       : ccm_token,
       ajax            : 1
-     }).done(function(data) {
-        $('.commentable_sharingbox_wall').before(data).remove();
-      });
+    }).done(function(data) {
+      $('.commentable_sharingbox_wall').before(data).remove();
+    });
 
     return false;
   });
 
-   $(".cwsComment").focus(function () {
-    $(this).val( '' );
-    $(this).css( 'color', '#000000' );
-    });
+  $(document).on('focus', '.cwsComment', function () {
+    $(this).val( '' ).css( 'color', '#000000' );
+  });
 
-  $('.cws-comment-bar').click(function() {
+  $('.cws-comment-bar').on('click', function () {
     var pID = $(this).attr("id").match(/[\d]+$/);
     $("#cwsComment_" + pID).focus();
   });
 
-  $(".cws-wall-post-comment, .commentable-wall-item").hover(
-    function () {
-        $('li.cws-edit-tools',this).show();
-      },
-      function () {
-      $('li.cws-edit-tools',this).hide();
-   });
+  $(document).on('mouseenter', '.cws-wall-post-comment, .commentable-wall-item', function() {
+    $('li.cws-edit-tools',this).show();
+  });
+  $(document).on('mouseleave', '.cws-wall-post-comment, .commentable-wall-item', function() {
+    $('li.cws-edit-tools',this).hide();
+  });
 
-  $("#photo-upload-btn").click(function() {
+  $("#photo-upload-btn").on('click', function () {
     $(this).button('loading');
   });
-}
-
-function postComment(pID){
-  $.post(SB_COMMENT_HELPER, {
-    pID       : pID,
-    comtext   : $("input#cwsComment_" + pID).val(),
-    sbUID     : sbUID,
-    ccm_token : ccm_token,
-    ajax      : 1
-  }).done(function(data) {
-    $('div.cws-comments_' + pID).before(data).remove();
-    $('div.cws-comments_' + pID).effect("highlight", {}, 800);
-  });
-
-  return false;
-}
-
-$(document).ready(function() {
 
   $("#ccm-file-upload-multiple-btnCancel").on('click', function(e){
     e.preventDefault();
@@ -896,7 +892,6 @@ $(document).ready(function() {
     });
     return false;
   });
-
 
   $("#cws-status-form").on('submit', function() {
     $(".loading").show();

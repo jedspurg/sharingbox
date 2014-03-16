@@ -134,7 +134,8 @@ class SharingboxPost extends Model{
     }else{
       $sql="UPDATE SharingboxComments SET commentText = ? WHERE commentID = ?";
     }
-		$this->db->execute($sql, array($commText,$commID));
+    $data = array($commText,$commID);
+		$this->db->execute($sql, $data);
 	}
 
 	public function deleteComment($commID){
